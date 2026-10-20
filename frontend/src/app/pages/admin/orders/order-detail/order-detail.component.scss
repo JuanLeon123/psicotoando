@@ -1,0 +1,117 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: start;
+  min-height: 44px;
+  color: var(--color-primary);
+  font-weight: 800;
+}
+.back-icon {
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
+}
+.reference {
+  font-variant-numeric: tabular-nums;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+.detail-main,
+.detail-side {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.panel {
+  display: grid;
+  gap: var(--space-2);
+}
+.lines {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lines li,
+.totals > div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.lines small {
+  display: block;
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.lines strong,
+.totals dd {
+  margin: 0;
+  color: var(--color-heading);
+  font-weight: 800;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.totals {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-line);
+}
+.totals dt {
+  color: var(--color-muted);
+}
+.totals .total dt {
+  color: var(--color-heading);
+  font-weight: 800;
+}
+.facts {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+.facts dt {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+.facts dd {
+  margin: 2px 0 0;
+  color: var(--color-heading);
+  overflow-wrap: anywhere;
+}
+.mono {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 14px;
+}
+select.form-input {
+  appearance: auto;
+}
+.save-button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.text-link {
+  justify-self: start;
+  color: var(--color-primary);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,70 @@
+<div class="post-page page">
+  <div class="container">
+    <a class="back-link" routerLink="/blog"><app-icon name="arrow" />Volver al blog</a>
+
+    @switch (state()) {
+      @case ("loading") {
+        <div class="article-skeleton" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p class="sr-only" role="status">Cargando artículo…</p>
+      }
+      @case ("not-found") {
+        <div class="post-message">
+          <h1>No encontramos este artículo</h1>
+          <p>Puede que se haya movido o que ya no esté publicado.</p>
+          <a class="button button--primary" routerLink="/blog">Ver todos los artículos</a>
+        </div>
+      }
+      @case ("error") {
+        <div class="post-message" role="alert">
+          <h1>No pudimos cargar el artículo</h1>
+          <p>Revisa tu conexión e inténtalo de nuevo.</p>
+          <a class="button button--outline" routerLink="/blog">Volver al blog</a>
+        </div>
+      }
+      @default {
+        @if (post(); as post) {
+          <article class="article">
+            <header class="article-header">
+              @if (post.category) {
+                <p class="eyebrow">{{ post.category }}</p>
+              }
+              <h1>{{ post.title }}</h1>
+              @if (post.excerpt) {
+                <p class="lead">{{ post.excerpt }}</p>
+              }
+              <p class="article-meta">
+                <time [attr.datetime]="post.publishedAt">{{ formatDate(post.publishedAt) }}</time>
+                · {{ post.readingMinutes }} min de lectura
+              </p>
+            </header>
+            @if (post.coverUrl; as src) {
+              <img class="article-cover" [src]="src" [alt]="post.coverAlt" width="1200" height="675" />
+            }
+            <app-post-blocks class="article-body" [blocks]="post.blocks" />
+          </article>
+
+          @if (related().length) {
+            <aside class="related" aria-labelledby="related-title">
+              <h2 id="related-title">Sigue leyendo</h2>
+              <ul>
+                @for (item of related(); track item.id) {
+                  <li>
+                    <a class="related-card" [routerLink]="['/blog', item.slug]">
+                      @if (item.coverUrl; as src) {
+                        <img [src]="src" [alt]="item.coverAlt" width="320" height="200" loading="lazy" />
+                      }
+                      <span class="related-title">{{ item.title }}</span>
+                      <span class="related-meta">{{ formatDate(item.publishedAt) }}</span>
+                    </a>
+                  </li>
+                }
+              </ul>
+            </aside>
+          }
+        }
+      }
+    }
+  </div>
+</div>

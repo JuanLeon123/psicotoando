@@ -1,0 +1,18 @@
+<section class="next-steps container" aria-labelledby="next-steps-title">
+  <p class="eyebrow">Sigue explorando</p>
+  <h2 id="next-steps-title">Te acompañamos más allá del kit</h2>
+  <ul class="step-list">
+    @for (step of steps; track step.link) {
+      <li>
+        <a class="step" [routerLink]="step.link">
+          <span class="step-icon"><app-icon [name]="step.icon" /></span>
+          <span class="step-title">{{ step.title }}</span>
+          <span class="step-description">{{ step.description }}</span>
+          <span class="step-more"
+            >Ver más<app-icon name="arrow"
+          /></span>
+        </a>
+      </li>
+    }
+  </ul>
+</section>

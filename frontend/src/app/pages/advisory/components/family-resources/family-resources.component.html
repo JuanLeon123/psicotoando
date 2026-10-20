@@ -1,0 +1,45 @@
+<aside class="family-resources" aria-labelledby="family-resources-title">
+  @if (hasLinks()) {
+    <div class="social-icons">
+      @if (settings().instagramUrl; as url) {
+        <a
+          class="social-icon social-icon--instagram"
+          [href]="url"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram de Psico T.O ando (se abre en otra pestaña)"
+          ><app-icon name="instagram"
+        /></a>
+      }
+      @if (settings().facebookUrl; as url) {
+        <a
+          class="social-icon social-icon--facebook"
+          [href]="url"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook de Psico T.O ando (se abre en otra pestaña)"
+          ><app-icon name="facebook"
+        /></a>
+      }
+    </div>
+  } @else {
+    <div class="social-icons" aria-hidden="true">
+      <span class="social-icon social-icon--instagram"
+        ><app-icon name="instagram" /></span
+      ><span class="social-icon social-icon--facebook"
+        ><app-icon name="facebook"
+      /></span>
+    </div>
+  }
+  <div class="resources-copy">
+    <h3 id="family-resources-title">Recursos continuos para las familias</h3>
+    <p>
+      Recibirás información constante y recomendaciones a través de nuestras
+      redes sociales y del <strong>Club de Padres en Facebook.</strong> Ideas,
+      consejos y actividades para seguir aprendiendo en familia.
+    </p>
+    @if (!hasLinks()) {
+      <p class="availability">Enlaces disponibles próximamente.</p>
+    }
+  </div>
+</aside>

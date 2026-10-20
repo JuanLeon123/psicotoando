@@ -1,0 +1,23 @@
+<section class="initial-consultation" aria-labelledby="initial-title">
+  <div class="stage-copy">
+    <h2 id="initial-title">
+      <span class="stage-number" aria-hidden="true">1</span>Asesoría virtual
+      inicial
+    </h2>
+    <p>
+      Realizamos una valoración rápida de acuerdo a los antecedentes y manejo
+      terapéutico actual, con el fin de guiar a los padres o cuidadores sobre el
+      producto más adecuado y los objetivos iniciales.
+      <strong>Estos son fundamentales para que el proceso sea con sentido.</strong>
+    </p>
+  </div>
+  <ol class="consultation-steps" aria-label="Pasos de la asesoría inicial">
+    @for (step of steps; track step.icon) {
+      <li class="consultation-step">
+        <span class="step-icon"><app-icon [name]="step.icon" /></span>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </li>
+    }
+  </ol>
+</section>

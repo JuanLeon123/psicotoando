@@ -1,0 +1,81 @@
+.settings-form {
+  max-width: 720px;
+  gap: var(--space-4);
+}
+.settings-group {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+legend {
+  margin-bottom: var(--space-2);
+  color: var(--color-heading);
+  font-size: var(--fs-h3);
+  font-weight: 800;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 640px) {
+  .form-actions .button {
+    width: 100%;
+  }
+}
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-3);
+}
+.optional {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+.wompi-card {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 720px;
+}
+.wompi-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+.wompi-steps {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+.wompi-steps code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--color-cream);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.webhook-row {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-1);
+}
+.webhook-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+}
+@media (max-width: 640px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+  .webhook-row {
+    flex-direction: column;
+  }
+}

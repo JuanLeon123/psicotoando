@@ -1,0 +1,40 @@
+@use "../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.kits-page {
+  display: grid;
+  gap: var(--section-gap);
+}
+.kits-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: center;
+}
+.kits-showcase {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+.purpose-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-1);
+  max-width: 52ch;
+  color: var(--color-green-dark);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.purpose-note app-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-coral);
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  .kits-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+}

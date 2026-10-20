@@ -1,0 +1,24 @@
+<section class="follow-up" aria-labelledby="follow-up-title">
+  <div class="stage-copy">
+    <h2 id="follow-up-title">
+      <span class="stage-number" aria-hidden="true">2</span>Acompañamiento y
+      seguimiento
+    </h2>
+    <p>
+      Una vez adquieras tu kit,
+      <strong>te acompañamos durante el proceso</strong> para que aproveches al
+      máximo sus beneficios.
+    </p>
+  </div>
+  <div class="service-cards">
+    @for (service of services; track service.icon) {
+      <article class="service-card">
+        <span class="service-icon"><app-icon [name]="service.icon" /></span>
+        <div>
+          <h3>{{ service.title }}</h3>
+          <p>{{ service.description }}</p>
+        </div>
+      </article>
+    }
+  </div>
+</section>

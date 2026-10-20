@@ -1,0 +1,312 @@
+<div class="admin-page editor">
+  <a class="back-link" routerLink="/admin/blog"><app-icon name="arrow" />Volver al blog</a>
+
+  @switch (state()) {
+    @case ("loading") {
+      <p class="state" aria-busy="true">Cargando artículo…</p>
+    }
+    @case ("not-found") {
+      <div class="state">
+        <h2>No encontramos este artículo</h2>
+        <a class="button button--ghost button--small" routerLink="/admin/blog">Ver artículos</a>
+      </div>
+    }
+    @case ("error") {
+      <div class="state">
+        <h2>No pudimos cargar el artículo</h2>
+        <a class="button button--ghost button--small" routerLink="/admin/blog">Volver</a>
+      </div>
+    }
+    @default {
+      <header class="page-header">
+        <div>
+          <h1>{{ isNew() ? "Nuevo artículo" : "Editar artículo" }}</h1>
+          <p class="page-intro">
+            Arma el artículo con bloques de texto, fotos y videos. Puedes ver cómo
+            quedará antes de publicarlo.
+          </p>
+        </div>
+        <div class="mode-switch" role="group" aria-label="Modo">
+          <button type="button" [attr.aria-pressed]="!preview()" (click)="preview.set(false)">Editar</button>
+          <button type="button" [attr.aria-pressed]="preview()" (click)="preview.set(true)">Vista previa</button>
+        </div>
+      </header>
+
+      <div class="live-region" aria-live="polite">
+        @if (message(); as text) {
+          <p class="form-alert form-alert--success">{{ text }}</p>
+        }
+        @if (error(); as text) {
+          <p class="form-alert form-alert--error">{{ text }}</p>
+        }
+      </div>
+
+      <div class="editor-layout">
+        <div class="editor-main">
+          @if (preview()) {
+            <article class="preview panel" aria-label="Vista previa del artículo">
+              @if (category()) {
+                <p class="eyebrow">{{ category() }}</p>
+              }
+              <h1 class="preview-title">{{ title() || "Sin título" }}</h1>
+              @if (excerpt()) {
+                <p class="lead">{{ excerpt() }}</p>
+              }
+              @if (coverUrl(); as src) {
+                <img class="preview-cover" [src]="src" [alt]="coverAlt()" />
+              }
+              @if (previewContent().length) {
+                <app-post-blocks [blocks]="previewContent()" />
+              } @else {
+                <p class="form-hint">Aún no hay contenido completo para mostrar.</p>
+              }
+            </article>
+          } @else {
+            <section class="panel form-stack" aria-labelledby="info-title">
+              <h2 id="info-title">Información</h2>
+              <div class="form-field">
+                <label class="form-label" for="post-title">Título</label>
+                <input
+                  id="post-title"
+                  class="form-input"
+                  maxlength="160"
+                  [value]="title()"
+                  (input)="setField('title', $any($event.target).value)"
+                />
+              </div>
+              <div class="form-field">
+                <label class="form-label" for="post-excerpt">Resumen <span class="form-optional">(opcional)</span></label>
+                <textarea
+                  id="post-excerpt"
+                  class="form-input"
+                  rows="3"
+                  [attr.maxlength]="excerptMax"
+                  aria-describedby="excerpt-hint"
+                  [value]="excerpt()"
+                  (input)="setField('excerpt', $any($event.target).value)"
+                ></textarea>
+                <p id="excerpt-hint" class="form-hint">
+                  Se muestra en la tarjeta del blog y en los buscadores. {{ excerpt().length }}/{{ excerptMax }}
+                </p>
+              </div>
+            </section>
+
+            <section class="panel" aria-labelledby="content-title">
+              <h2 id="content-title">Contenido</h2>
+              <p class="panel-intro">Los bloques se muestran en este orden. Usa las flechas para moverlos.</p>
+
+              @if (blocks().length === 0) {
+                <p class="empty-blocks">Añade el primer bloque para empezar a escribir.</p>
+              }
+
+              <ol class="block-list">
+                @for (block of blocks(); track block.uid; let i = $index, first = $first, last = $last) {
+                  <li class="block" [attr.data-block]="block.uid" [class.has-error]="blockErrors().has(block.uid)">
+                    <div class="block-head">
+                      <span class="block-type">{{ i + 1 }}. {{ blockLabels[block.type] }}</span>
+                      <div class="block-tools">
+                        <button type="button" class="tool" [disabled]="first" [attr.aria-label]="'Subir bloque ' + (i + 1)" (click)="moveBlock(block.uid, -1)">↑</button>
+                        <button type="button" class="tool" [disabled]="last" [attr.aria-label]="'Bajar bloque ' + (i + 1)" (click)="moveBlock(block.uid, 1)">↓</button>
+                        <button type="button" class="tool tool--danger" [attr.aria-label]="'Eliminar bloque ' + (i + 1)" (click)="removeBlock(block.uid)">
+                          <app-icon name="close" />
+                        </button>
+                      </div>
+                    </div>
+
+                    @switch (block.type) {
+                      @case ("paragraph") {
+                        <label class="sr-only" [for]="'b-' + block.uid">Texto del párrafo</label>
+                        <textarea [id]="'b-' + block.uid" class="form-input" rows="5" maxlength="5000"
+                          placeholder="Escribe aquí. Los saltos de línea se respetan."
+                          [value]="$any(block).text" (input)="updateBlock(block.uid, { text: $any($event.target).value })"></textarea>
+                      }
+                      @case ("heading") {
+                        <label class="sr-only" [for]="'b-' + block.uid">Texto del subtítulo</label>
+                        <input [id]="'b-' + block.uid" class="form-input heading-input" maxlength="160" placeholder="Subtítulo"
+                          [value]="$any(block).text" (input)="updateBlock(block.uid, { text: $any($event.target).value })" />
+                      }
+                      @case ("image") {
+                        <div class="media-row">
+                          @if ($any(block).url) {
+                            <img class="media-thumb" [src]="$any(block).url" alt="" />
+                          }
+                          <button type="button" class="button button--ghost button--small" (click)="chooseMedia(block)">
+                            {{ $any(block).url ? "Cambiar imagen" : "Elegir imagen" }}
+                          </button>
+                        </div>
+                        <div class="form-field">
+                          <label class="form-label" [for]="'alt-' + block.uid">Descripción de la imagen</label>
+                          <input [id]="'alt-' + block.uid" class="form-input" maxlength="300" placeholder="Qué se ve en la foto"
+                            [value]="$any(block).alt" (input)="updateBlock(block.uid, { alt: $any($event.target).value })" />
+                        </div>
+                        <div class="form-field">
+                          <label class="form-label" [for]="'cap-' + block.uid">Pie de foto <span class="form-optional">(opcional)</span></label>
+                          <input [id]="'cap-' + block.uid" class="form-input" maxlength="300"
+                            [value]="$any(block).caption" (input)="updateBlock(block.uid, { caption: $any($event.target).value })" />
+                        </div>
+                      }
+                      @case ("gallery") {
+                        @if ($any(block).images.length) {
+                          <ul class="gallery-edit">
+                            @for (image of $any(block).images; track image.url; let j = $index) {
+                              <li>
+                                <img [src]="image.url" alt="" />
+                                <label class="sr-only" [for]="'g-' + block.uid + '-' + j">Descripción de la imagen {{ j + 1 }}</label>
+                                <input [id]="'g-' + block.uid + '-' + j" class="form-input" maxlength="300" placeholder="Descripción"
+                                  [value]="image.alt" (input)="updateGalleryAlt(block.uid, j, $any($event.target).value)" />
+                                <button type="button" class="tool tool--danger" [attr.aria-label]="'Quitar imagen ' + (j + 1)" (click)="removeGalleryImage(block.uid, j)">
+                                  <app-icon name="close" />
+                                </button>
+                              </li>
+                            }
+                          </ul>
+                        }
+                        <button type="button" class="button button--ghost button--small" (click)="chooseMedia(block)">
+                          {{ $any(block).images.length ? "Cambiar imágenes" : "Elegir imágenes" }}
+                        </button>
+                      }
+                      @case ("video") {
+                        <div class="media-row">
+                          @if ($any(block).url) {
+                            <video class="media-thumb" [src]="$any(block).url" preload="metadata" muted playsinline></video>
+                          }
+                          <button type="button" class="button button--ghost button--small" (click)="chooseMedia(block)">
+                            {{ $any(block).url ? "Cambiar video" : "Elegir video" }}
+                          </button>
+                        </div>
+                        <div class="form-field">
+                          <label class="form-label" [for]="'cap-' + block.uid">Pie del video <span class="form-optional">(opcional)</span></label>
+                          <input [id]="'cap-' + block.uid" class="form-input" maxlength="300"
+                            [value]="$any(block).caption" (input)="updateBlock(block.uid, { caption: $any($event.target).value })" />
+                        </div>
+                      }
+                      @case ("youtube") {
+                        <div class="form-field">
+                          <label class="form-label" [for]="'yt-' + block.uid">Enlace de YouTube</label>
+                          <input [id]="'yt-' + block.uid" class="form-input" type="url" placeholder="https://www.youtube.com/watch?v=…"
+                            [value]="$any(block).link" (input)="updateBlock(block.uid, { link: $any($event.target).value })" />
+                        </div>
+                        @if (youtubeId($any(block).link); as id) {
+                          <img class="youtube-thumb" [src]="youtubeThumbnail(id)" alt="Miniatura del video de YouTube" />
+                        } @else if ($any(block).link) {
+                          <p class="form-error">Este enlace no es de un video de YouTube.</p>
+                        }
+                        <div class="form-field">
+                          <label class="form-label" [for]="'cap-' + block.uid">Pie del video <span class="form-optional">(opcional)</span></label>
+                          <input [id]="'cap-' + block.uid" class="form-input" maxlength="300"
+                            [value]="$any(block).caption" (input)="updateBlock(block.uid, { caption: $any($event.target).value })" />
+                        </div>
+                      }
+                      @case ("quote") {
+                        <label class="sr-only" [for]="'b-' + block.uid">Texto de la cita</label>
+                        <textarea [id]="'b-' + block.uid" class="form-input" rows="3" maxlength="1000" placeholder="La cita"
+                          [value]="$any(block).text" (input)="updateBlock(block.uid, { text: $any($event.target).value })"></textarea>
+                        <div class="form-field">
+                          <label class="form-label" [for]="'au-' + block.uid">Autor <span class="form-optional">(opcional)</span></label>
+                          <input [id]="'au-' + block.uid" class="form-input" maxlength="120"
+                            [value]="$any(block).author" (input)="updateBlock(block.uid, { author: $any($event.target).value })" />
+                        </div>
+                      }
+                      @case ("list") {
+                        <label class="form-label" [for]="'b-' + block.uid">Elementos, uno por línea</label>
+                        <textarea [id]="'b-' + block.uid" class="form-input" rows="4"
+                          [value]="$any(block).text" (input)="updateBlock(block.uid, { text: $any($event.target).value })"></textarea>
+                      }
+                    }
+
+                    @if (blockErrors().get(block.uid); as problem) {
+                      <p class="form-error">{{ problem }}</p>
+                    }
+                  </li>
+                }
+              </ol>
+
+              <div class="add-block">
+                <button
+                  type="button"
+                  class="button button--outline button--small"
+                  [attr.aria-expanded]="addMenuOpen()"
+                  aria-controls="block-menu"
+                  (click)="addMenuOpen.set(!addMenuOpen())"
+                >
+                  + Añadir bloque
+                </button>
+                @if (addMenuOpen()) {
+                  <div id="block-menu" class="block-menu" role="group" aria-label="Tipo de bloque">
+                    @for (type of blockTypes; track type) {
+                      <button type="button" (click)="addBlock(type)">{{ blockLabels[type] }}</button>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+
+        <aside class="editor-side">
+          <section class="panel form-stack" aria-labelledby="publish-title">
+            <h2 id="publish-title">Publicación</h2>
+            <label class="switch">
+              <input type="checkbox" role="switch" [checked]="status() === 'published'" (change)="setStatus($any($event.target).checked)" />
+              <span class="switch-track" aria-hidden="true"></span>
+              <span>
+                <strong>{{ status() === "published" ? "Publicado" : "Borrador" }}</strong>
+                <small>{{ status() === "published" ? "Visible en el blog." : "Solo se ve en el panel." }}</small>
+              </span>
+            </label>
+            <div class="form-field">
+              <label class="form-label" for="post-date">Fecha de publicación <span class="form-optional">(opcional)</span></label>
+              <input id="post-date" class="form-input" type="datetime-local" aria-describedby="date-hint"
+                [value]="publishedAt()" (input)="setField('publishedAt', $any($event.target).value)" />
+              <p id="date-hint" class="form-hint">Vacía = ahora al publicar. Una fecha futura lo programa.</p>
+            </div>
+            <button class="button button--primary" type="button" [disabled]="saving()" (click)="save()">
+              {{ saving() ? "Guardando…" : isNew() ? "Crear artículo" : "Guardar cambios" }}
+            </button>
+            @if (slug() && status() === "published") {
+              <a class="text-link" [routerLink]="['/blog', slug()]" target="_blank">Ver en el blog</a>
+            }
+            @if (dirty()) {
+              <p class="form-hint unsaved">Tienes cambios sin guardar.</p>
+            }
+          </section>
+
+          <section class="panel form-stack" aria-labelledby="cover-title">
+            <h2 id="cover-title">Portada</h2>
+            @if (coverUrl(); as src) {
+              <img class="cover-preview" [src]="src" alt="" />
+              <div class="form-field">
+                <label class="form-label" for="cover-alt">Descripción de la portada</label>
+                <input id="cover-alt" class="form-input" maxlength="300"
+                  [value]="coverAlt()" (input)="setField('coverAlt', $any($event.target).value)" />
+              </div>
+              <div class="cover-actions">
+                <button type="button" class="button button--ghost button--small" (click)="chooseCover()">Cambiar</button>
+                <button type="button" class="button button--ghost button--small" (click)="removeCover()">Quitar</button>
+              </div>
+            } @else {
+              <p class="panel-intro">Se muestra en la tarjeta del blog y arriba del artículo.</p>
+              <button type="button" class="button button--ghost button--small" (click)="chooseCover()">Elegir imagen</button>
+            }
+          </section>
+
+          <section class="panel form-stack" aria-labelledby="category-title">
+            <h2 id="category-title">Categoría</h2>
+            <div class="form-field">
+              <label class="form-label" for="post-category">Categoría <span class="form-optional">(opcional)</span></label>
+              <input id="post-category" class="form-input" maxlength="60" list="category-options" placeholder="Por ejemplo: Juego en casa"
+                [value]="category()" (input)="setField('category', $any($event.target).value)" />
+              <datalist id="category-options">
+                @for (item of categories(); track item) {
+                  <option [value]="item"></option>
+                }
+              </datalist>
+            </div>
+          </section>
+        </aside>
+      </div>
+    }
+  }
+</div>
+
+<app-media-picker (picked)="onPicked($event)" />

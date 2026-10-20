@@ -1,0 +1,64 @@
+:host {
+  display: block;
+  pointer-events: none;
+}
+img,
+svg {
+  width: 100%;
+  height: auto;
+}
+.leaf {
+  fill: var(--color-green);
+}
+.stem {
+  stroke: var(--color-green-dark);
+  stroke-width: 2;
+}
+.navy {
+  fill: var(--color-navy);
+}
+.blue {
+  fill: var(--color-social-blue);
+}
+.sky {
+  fill: var(--color-sky);
+  opacity: 0.7;
+}
+.yellow {
+  fill: var(--color-yellow);
+}
+.coral {
+  fill: var(--color-coral);
+}
+.teal {
+  fill: var(--color-primary);
+}
+.skin {
+  fill: var(--color-skin);
+}
+.paper {
+  fill: var(--color-surface);
+  stroke: var(--color-social-blue);
+  stroke-width: 3;
+}
+.light-line,
+.navy-line,
+.coral-line,
+.soft-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+.light-line {
+  stroke: var(--color-surface);
+  stroke-width: 2;
+}
+.navy-line {
+  stroke: var(--color-navy);
+}
+.coral-line {
+  stroke: var(--color-coral);
+}
+.soft-line {
+  stroke: var(--color-decoration-dot);
+}

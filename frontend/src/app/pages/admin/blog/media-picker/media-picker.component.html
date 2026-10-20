@@ -1,0 +1,81 @@
+<dialog #dialog class="picker" aria-labelledby="picker-title">
+  <header class="picker-header">
+    <h2 id="picker-title">{{ title() }}</h2>
+    <button class="icon-close" type="button" aria-label="Cerrar" (click)="close()">
+      <app-icon name="close" />
+    </button>
+  </header>
+
+  <div class="picker-upload">
+    <label class="button button--primary button--small upload-button">
+      <input type="file" [accept]="accept()" (change)="upload($event)" [disabled]="progress() !== null" />
+      {{ options().kind === "image" ? "Subir imagen" : "Subir video" }}
+    </label>
+    <p class="form-hint">
+      @if (options().kind === "image") {
+        JPG, PNG o WebP de hasta 5 MB.
+      } @else {
+        MP4 o WebM de hasta 80 MB. Para videos largos, mejor súbelos a YouTube.
+      }
+    </p>
+  </div>
+
+  <div aria-live="polite">
+    @if (progress() !== null) {
+      <div class="progress" role="progressbar" aria-label="Subiendo archivo" [attr.aria-valuenow]="progress()" aria-valuemin="0" aria-valuemax="100">
+        <span [style.width.%]="progress()"></span>
+      </div>
+      <p class="form-hint">Subiendo… {{ progress() }} %</p>
+    }
+    @if (error(); as text) {
+      <p class="form-alert form-alert--error">{{ text }}</p>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="state">Cargando biblioteca…</p>
+  } @else if (items().length === 0) {
+    <p class="state">
+      Aún no hay {{ options().kind === "image" ? "imágenes" : "videos" }} en la biblioteca. Sube el primero.
+    </p>
+  } @else {
+    <ul class="media-grid">
+      @for (item of items(); track item.id) {
+        <li>
+          <button
+            class="media-item"
+            type="button"
+            [class.is-selected]="isSelected(item)"
+            [attr.aria-pressed]="options().multiple ? isSelected(item) : null"
+            [attr.aria-label]="(options().multiple ? 'Seleccionar ' : 'Usar ') + (item.originalName || 'archivo')"
+            (click)="toggle(item)"
+          >
+            @if (item.kind === "image") {
+              <img [src]="item.url" alt="" loading="lazy" />
+            } @else {
+              <video [src]="item.url" preload="metadata" muted playsinline></video>
+              <span class="video-badge"><app-icon name="play" /></span>
+            }
+            @if (isSelected(item)) {
+              <span class="check" aria-hidden="true">✓</span>
+            }
+          </button>
+          <p class="media-name" [title]="item.originalName">{{ item.originalName || "Sin nombre" }}</p>
+          <p class="media-size">{{ sizeLabel(item.sizeBytes) }}</p>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (options().multiple) {
+    <footer class="picker-footer">
+      <p>{{ selected().length }} de 12 seleccionadas</p>
+      <div class="dialog-actions">
+        <button class="button button--ghost button--small" type="button" (click)="close()">Cancelar</button>
+        <button class="button button--primary button--small" type="button" [disabled]="selected().length === 0" (click)="confirm()">
+          Usar selección
+        </button>
+      </div>
+    </footer>
+  }
+</dialog>

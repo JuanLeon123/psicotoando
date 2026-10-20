@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  pointer-events: none;
+}
+i {
+  position: absolute;
+  display: block;
+  width: 44px;
+  height: 85px;
+  background: var(--color-primary);
+  border-radius: 0 95% 0 95%;
+  right: 0;
+}
+i::after {
+  content: "";
+  position: absolute;
+  inset: 10px 50% 10px auto;
+  width: 1px;
+  background: var(--color-decoration-vein);
+  transform: rotate(-24deg);
+}
+i:nth-child(2) {
+  width: 40px;
+  height: 67px;
+  background: var(--color-green);
+  left: 3px;
+  bottom: -13px;
+  transform: rotate(-44deg);
+}
+i:nth-child(3) {
+  width: 15px;
+  height: 30px;
+  background: var(--color-yellow);
+  left: 7px;
+  top: -4px;
+}

@@ -1,0 +1,44 @@
+@if (user(); as user) {
+  <div class="account-page">
+    <header class="account-header">
+      <div class="account-avatar" aria-hidden="true">
+        @if (user.avatarUrl) {
+          <img
+            [src]="user.avatarUrl"
+            alt=""
+            width="72"
+            height="72"
+            referrerpolicy="no-referrer"
+          />
+        } @else {
+          {{ initial() }}
+        }
+      </div>
+      <div class="account-greeting">
+        <p class="eyebrow">Mi cuenta</p>
+        <h1>Hola, {{ firstName() }}</h1>
+        <p class="account-email">
+          {{ user.email }}
+          @if (user.googleLinked) {
+            <span class="google-badge"
+              ><app-icon name="user" />Vinculada con Google</span
+            >
+          }
+        </p>
+      </div>
+      <button
+        class="button button--outline logout-button"
+        type="button"
+        [attr.aria-disabled]="loggingOut() || null"
+        (click)="logout()"
+      >
+        {{ loggingOut() ? "Cerrando sesión…" : "Cerrar sesión" }}
+      </button>
+    </header>
+    <div class="account-sections">
+      <app-profile-form [user]="user" />
+      <app-security-form [hasPassword]="user.hasPassword" />
+    </div>
+    <app-my-orders class="account-orders" />
+  </div>
+}

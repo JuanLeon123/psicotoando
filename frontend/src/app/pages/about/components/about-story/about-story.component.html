@@ -1,0 +1,31 @@
+<section class="story" aria-labelledby="about-title">
+  <div class="story-text">
+    <h1 id="about-title">Sobre <span>nosotros</span></h1>
+    <p class="story-tagline">
+      Acompañamos a las familias en cada paso del desarrollo.
+    </p>
+    <div class="story-copy">
+      @for (paragraph of paragraphs; track $index) {
+        <p>{{ paragraph }}</p>
+      }
+    </div>
+  </div>
+  <figure class="story-visual">
+    <div class="story-photo">
+      <img
+        ngSrc="images/about-play.webp"
+        fill
+        priority
+        sizes="(max-width: 1024px) 100vw, 40vw"
+        alt="Una mamá y su hijo comparten un juego con bloques de colores y fichas de actividades en casa."
+      />
+    </div>
+    <figcaption class="story-note">
+      <app-icon name="heart" />
+      <p>
+        Creemos que cuando las familias juegan con propósito, los niños
+        florecen.
+      </p>
+    </figcaption>
+  </figure>
+</section>

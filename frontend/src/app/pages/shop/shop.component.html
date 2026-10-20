@@ -1,0 +1,111 @@
+<div class="shop page">
+  <div class="container">
+    <header class="shop-header">
+      <p class="eyebrow">Tienda</p>
+      <h1>Kits para jugar y crecer en casa</h1>
+      <p class="lead">
+        Materiales terapéuticos con actividades guiadas, pensados para que cada
+        momento de juego en familia tenga sentido.
+      </p>
+    </header>
+
+    @switch (state()) {
+      @case ('loading') {
+        <ul class="product-grid" aria-hidden="true">
+          @for (placeholder of [1, 2, 3]; track placeholder) {
+            <li class="product-skeleton"></li>
+          }
+        </ul>
+        <p class="sr-only" role="status">Cargando productos…</p>
+      }
+      @case ('error') {
+        <div class="shop-message" role="alert">
+          <p>No pudimos cargar los productos. Revisa tu conexión.</p>
+          <button
+            class="button button--outline"
+            type="button"
+            (click)="load()"
+          >
+            Intentar de nuevo
+          </button>
+        </div>
+      }
+      @default {
+        @if (products().length) {
+          <ul class="product-grid">
+            @for (product of products(); track product.id) {
+              <li class="product-card">
+                <div class="product-image">
+                  @if (product.imageUrl; as src) {
+                    <img
+                      [src]="src"
+                      [alt]="product.imageAlt"
+                      width="640"
+                      height="480"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  }
+                  @if (!product.inStock) {
+                    <span class="badge">Agotado</span>
+                  }
+                </div>
+                <div class="product-body">
+                  <h2>{{ product.name }}</h2>
+                  @if (product.activities !== null) {
+                    <p class="product-meta">
+                      {{ product.activities }} actividades guiadas
+                    </p>
+                  }
+                  <p class="product-summary">{{ product.summary }}</p>
+                  <p class="product-price">{{ formatCop(product.priceCop) }}</p>
+                  <div class="product-actions">
+                    @if (canAddToCart(product)) {
+                      <button
+                        class="button button--primary"
+                        type="button"
+                        (click)="cart.addProduct(product)"
+                      >
+                        <app-icon name="cart" />Añadir al carrito
+                      </button>
+                    } @else if (product.inStock) {
+                      @if (orderUrl(product); as url) {
+                        <a
+                          class="button button--primary"
+                          [href]="url"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          ><app-icon name="whatsapp" />Preguntar por WhatsApp</a
+                        >
+                      }
+                    }
+                    <button
+                      class="button button--outline"
+                      type="button"
+                      (click)="openDetail(product)"
+                    >
+                      Ver detalle
+                    </button>
+                  </div>
+                  @if (cart.quantityOf(product.id); as inCart) {
+                    <p class="in-cart">
+                      <app-icon name="cart" />{{ inCart }} en tu carrito ·
+                      <a routerLink="/carrito">Ver carrito</a>
+                    </p>
+                  }
+                </div>
+              </li>
+            }
+          </ul>
+
+        } @else {
+          <div class="shop-message">
+            <p>
+              Estamos preparando nuevos kits. Muy pronto podrás verlos aquí.
+            </p>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>

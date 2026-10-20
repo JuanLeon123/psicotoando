@@ -1,0 +1,9 @@
+@if (isAdminArea()) {
+  <router-outlet />
+} @else {
+  <a class="skip-link" href="#main-content">Saltar al contenido</a>
+  <app-navbar />
+  <main id="main-content" tabindex="-1"><router-outlet /></main>
+  <app-footer />
+}
+<app-info-dialog />

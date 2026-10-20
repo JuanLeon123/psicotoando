@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+.about-section {
+  display: block;
+  margin-top: var(--section-gap);
+}
+.family-illustration {
+  width: min(320px, 70%);
+  height: auto;
+  margin: var(--space-6) auto 0;
+}

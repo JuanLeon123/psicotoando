@@ -1,0 +1,87 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+  margin-top: var(--section-gap);
+}
+.section-title {
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: center;
+}
+.recommendations-list {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 880px;
+  margin: var(--space-5) auto 0;
+  padding: 0;
+  list-style: none;
+}
+.recommendation {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 96px;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-cream);
+}
+.recommendation-number {
+  display: grid;
+  place-items: center;
+  align-self: start;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--color-surface);
+  background: var(--color-primary);
+  font-size: 1.125rem;
+  font-weight: 900;
+}
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: 800;
+}
+.recommendation-copy p {
+  max-width: var(--measure);
+  margin-top: var(--space-1);
+  line-height: 1.65;
+}
+.care-reminder {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  max-width: 600px;
+  margin: var(--space-6) auto 0;
+  text-align: center;
+}
+.care-reminder app-resource-illustration {
+  width: 64px;
+}
+.care-reminder p {
+  color: var(--color-heading);
+  font-size: var(--fs-lead);
+  font-weight: 700;
+  line-height: 1.55;
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .recommendations-list {
+    margin-top: var(--space-4);
+    gap: var(--space-2);
+  }
+  .recommendation {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+  .recommendation app-resource-illustration {
+    display: none;
+  }
+  .recommendation-number {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  .care-reminder {
+    margin-top: var(--space-5);
+  }
+}

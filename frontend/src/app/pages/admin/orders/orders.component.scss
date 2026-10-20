@@ -1,0 +1,146 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-2);
+}
+.search {
+  position: relative;
+  flex: 1 1 280px;
+}
+.search app-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 20px;
+  height: 20px;
+  color: var(--color-muted);
+  transform: translateY(-50%);
+}
+.search .form-input {
+  padding-left: 44px;
+}
+.filter {
+  display: grid;
+  gap: 4px;
+  flex: 0 1 200px;
+}
+.filter-label {
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+select.form-input {
+  appearance: auto;
+}
+.count {
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.orders-table th {
+  padding: 14px var(--space-2);
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-align: left;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-line);
+}
+.orders-table td {
+  padding: 14px var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+  vertical-align: middle;
+}
+.orders-table tr:last-child td {
+  border-bottom: 0;
+}
+.cell {
+  display: grid;
+  gap: 2px;
+}
+.num {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+}
+.order-link {
+  color: var(--color-primary);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-variant-numeric: tabular-nums;
+}
+.strong {
+  color: var(--color-heading);
+  font-weight: 800;
+}
+.muted {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--color-muted);
+  font-size: 14px;
+}
+@media (max-width: 760px) {
+  .table-wrap {
+    border: 0;
+    background: none;
+    overflow: visible;
+  }
+  .orders-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .orders-table,
+  .orders-table tbody,
+  .orders-table tr,
+  .orders-table td {
+    display: block;
+  }
+  .orders-table tr {
+    margin-bottom: var(--space-2);
+    padding: var(--space-2);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+  .orders-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: 6px 0;
+    border: 0;
+  }
+  .orders-table td::before {
+    content: attr(data-label);
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 800;
+  }
+  .cell {
+    justify-items: end;
+    text-align: right;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}

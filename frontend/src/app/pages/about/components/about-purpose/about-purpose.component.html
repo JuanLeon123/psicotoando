@@ -1,0 +1,12 @@
+<section class="purpose" aria-label="Nuestra misión y visión">
+  @for (statement of statements; track statement.title) {
+    <article
+      class="purpose-card"
+      [class.purpose-card--green]="statement.tone === 'green'"
+    >
+      <span class="purpose-icon"><app-icon [name]="statement.icon" /></span>
+      <h2>{{ statement.title }}</h2>
+      <p>{{ statement.description }}</p>
+    </article>
+  }
+</section>

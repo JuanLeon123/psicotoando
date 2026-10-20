@@ -1,0 +1,172 @@
+<div class="cart page">
+  <div class="container">
+    <header class="cart-header">
+      <p class="eyebrow">Tienda</p>
+      <h1>Tu carrito</h1>
+    </header>
+
+    @if (cart.items().length === 0) {
+      <div class="cart-empty">
+        <span class="empty-icon" aria-hidden="true"><app-icon name="cart" /></span>
+        <h2>Tu carrito está vacío</h2>
+        <p>Explora nuestros kits y añade los que quieras llevar a casa.</p>
+        <a class="button button--primary" routerLink="/tienda">Ir a la tienda</a>
+      </div>
+    } @else {
+      @switch (state()) {
+        @case ('loading') {
+          <div class="cart-layout" aria-hidden="true">
+            <ul class="cart-lines">
+              @for (item of cart.items(); track item.productId) {
+                <li class="line-skeleton"></li>
+              }
+            </ul>
+          </div>
+          <p class="sr-only" role="status">Calculando tu carrito…</p>
+        }
+        @case ('error') {
+          <div class="cart-message" role="alert">
+            <p>No pudimos calcular tu carrito. Revisa tu conexión.</p>
+            <button class="button button--outline" type="button" (click)="retry()">
+              Intentar de nuevo
+            </button>
+          </div>
+        }
+        @default {
+          @if (quote(); as quote) {
+            @if (stockAdjustments().length) {
+              <div class="stock-notice" role="status">
+                @for (item of stockAdjustments(); track item.name) {
+                  <p>
+                    Solo quedan {{ item.quantity }}
+                    {{ item.quantity === 1 ? 'unidad' : 'unidades' }} de
+                    <strong>{{ item.name }}</strong>; ajustamos la cantidad.
+                  </p>
+                }
+              </div>
+            }
+            <div class="cart-layout">
+              <ul class="cart-lines" aria-label="Productos en tu carrito">
+                @for (line of quote.lines; track line.productId) {
+                  <li class="cart-line" [class.is-blocked]="isBlocked(line)">
+                    <div class="line-image">
+                      @if (line.product?.imageUrl; as src) {
+                        <img
+                          [src]="src"
+                          [alt]="line.product?.imageAlt ?? ''"
+                          width="160"
+                          height="120"
+                          loading="lazy"
+                        />
+                      }
+                    </div>
+                    <div class="line-info">
+                      <h2>{{ line.product?.name ?? 'Producto no disponible' }}</h2>
+                      @if (line.unitPriceCop !== null && !isBlocked(line)) {
+                        <p class="line-unit">{{ formatCop(line.unitPriceCop) }} c/u</p>
+                      }
+                      @if (line.issue) {
+                        <p class="line-issue" role="status">
+                          {{ issueMessages[line.issue] }}
+                        </p>
+                      }
+                    </div>
+                    <div class="line-controls">
+                      @if (!isBlocked(line)) {
+                        <div
+                          class="stepper"
+                          role="group"
+                          [attr.aria-label]="'Cantidad de ' + line.product?.name"
+                        >
+                          <button
+                            type="button"
+                            [attr.aria-label]="'Quitar una unidad de ' + line.product?.name"
+                            (click)="decrease(line)"
+                          >
+                            −
+                          </button>
+                          <output aria-live="polite">{{ line.quantity }}</output>
+                          <button
+                            type="button"
+                            [attr.aria-label]="'Añadir una unidad de ' + line.product?.name"
+                            [disabled]="line.quantity >= line.maxQuantity"
+                            (click)="increase(line)"
+                          >
+                            +
+                          </button>
+                        </div>
+                        <p class="line-total">{{ formatCop(line.lineTotalCop) }}</p>
+                      }
+                      <button
+                        class="remove-button"
+                        type="button"
+                        [attr.aria-label]="'Eliminar ' + (line.product?.name ?? 'producto') + ' del carrito'"
+                        (click)="remove(line)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </li>
+                }
+              </ul>
+
+              <aside class="cart-summary" aria-labelledby="summary-title">
+                <h2 id="summary-title">Resumen</h2>
+                <dl>
+                  <div>
+                    <dt>Productos</dt>
+                    <dd>{{ quote.itemCount }}</dd>
+                  </div>
+                  <div>
+                    <dt>Subtotal</dt>
+                    <dd>{{ formatCop(quote.subtotalCop) }}</dd>
+                  </div>
+                  <div>
+                    <dt>Envío</dt>
+                    <dd>{{ shippingCop() ? formatCop(shippingCop()) : 'Gratis' }}</dd>
+                  </div>
+                  <div class="summary-total">
+                    <dt>Total</dt>
+                    <dd>{{ formatCop(quote.subtotalCop + shippingCop()) }}</dd>
+                  </div>
+                </dl>
+                @if (paymentsEnabled() && quote.purchasable) {
+                  <a class="button button--primary checkout-button" routerLink="/checkout">
+                    Continuar al pago
+                  </a>
+                  <p class="checkout-note">
+                    Pago seguro con Wompi: tarjetas, PSE, Nequi y más.
+                  </p>
+                } @else {
+                  <button class="button button--primary checkout-button" type="button" disabled>
+                    Continuar al pago
+                  </button>
+                  @if (!paymentsEnabled()) {
+                    <p class="checkout-note">
+                      El pago en línea (tarjetas, PSE y Nequi) se activará muy pronto.
+                    </p>
+                  }
+                }
+                @if (!quote.purchasable) {
+                  <p class="checkout-warning" role="status">
+                    Quita los productos que no están disponibles para continuar.
+                  </p>
+                }
+                @if (orderUrl(); as url) {
+                  <a
+                    class="button button--outline"
+                    [href]="url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    ><app-icon name="whatsapp" />Enviar pedido por WhatsApp</a
+                  >
+                }
+                <a class="keep-shopping" routerLink="/tienda">Seguir comprando</a>
+              </aside>
+            </div>
+          }
+        }
+      }
+    }
+  </div>
+</div>

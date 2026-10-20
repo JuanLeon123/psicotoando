@@ -1,0 +1,92 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.advisory-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: var(--space-6);
+  align-items: center;
+}
+.hero-copy {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+h1 {
+  color: var(--color-heading);
+  font-size: var(--fs-h1);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+h1 > span {
+  color: var(--color-coral-dark);
+}
+.mobile-booking {
+  margin-top: var(--space-1);
+}
+.mobile-booking app-icon {
+  width: 22px;
+  height: 22px;
+}
+.hero-visual {
+  position: relative;
+  margin: 0 0 var(--space-4);
+}
+.hero-photo {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: 32px;
+}
+.hero-photo img {
+  object-fit: cover;
+  object-position: 48% 30%;
+}
+.hero-note {
+  position: absolute;
+  left: calc(var(--space-4) * -1);
+  bottom: calc(var(--space-4) * -1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 290px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: 0 12px 32px var(--color-shadow-soft);
+}
+.hero-note app-icon {
+  flex: 0 0 auto;
+  color: var(--color-coral);
+}
+.hero-note p {
+  color: var(--color-heading);
+  font-size: var(--fs-small);
+  font-weight: 700;
+  line-height: 1.45;
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  .advisory-hero {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .hero-note {
+    left: var(--space-2);
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .mobile-booking {
+    width: 100%;
+  }
+  .hero-visual {
+    margin-bottom: 0;
+  }
+  .hero-note {
+    position: static;
+    max-width: none;
+    margin-top: var(--space-2);
+    box-shadow: none;
+    background: var(--color-cream);
+  }
+}

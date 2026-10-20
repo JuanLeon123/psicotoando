@@ -1,0 +1,82 @@
+<dialog
+  #dialog
+  aria-labelledby="info-dialog-title"
+  aria-describedby="info-dialog-description"
+  (cancel)="info.close()"
+  (close)="info.close()"
+  (click)="closeOnBackdrop($event)"
+>
+  @if (info.content(); as content) {
+    <button
+      class="close-button"
+      type="button"
+      aria-label="Cerrar ventana"
+      (click)="info.close()"
+      autofocus
+    >
+      <app-icon name="close" />
+    </button>
+    @if (content.image) {
+      <img
+        class="dialog-image"
+        [src]="content.image"
+        [alt]="content.imageAlt ?? ''"
+        width="560"
+        height="320"
+      />
+    }
+    <p class="eyebrow">{{ content.eyebrow }}</p>
+    <h2 id="info-dialog-title">{{ content.title }}</h2>
+    @if (content.highlight) {
+      <p class="dialog-highlight">{{ content.highlight }}</p>
+    }
+    <p id="info-dialog-description">{{ content.description }}</p>
+    @if (content.items) {
+      <ul>
+        @for (item of content.items; track item) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    }
+    <div class="dialog-actions">
+      @if (content.action; as action) {
+        @if (action.href) {
+          <a
+            class="button button--primary"
+            [href]="action.href"
+            target="_blank"
+            rel="noopener noreferrer"
+            >@if (action.icon) {
+              <app-icon [name]="action.icon" />
+            }{{ action.label }}</a
+          >
+        } @else {
+          <button
+            class="button button--primary"
+            type="button"
+            (click)="runAction(action)"
+          >
+            @if (action.icon) {
+              <app-icon [name]="action.icon" />
+            }{{ action.label }}
+          </button>
+        }
+        <button
+          class="button button--outline"
+          type="button"
+          (click)="info.close()"
+        >
+          Cerrar
+        </button>
+      } @else {
+        <button
+          class="button button--primary"
+          type="button"
+          (click)="info.close()"
+        >
+          Entendido <app-icon name="heart" />
+        </button>
+      }
+    </div>
+  }
+</dialog>

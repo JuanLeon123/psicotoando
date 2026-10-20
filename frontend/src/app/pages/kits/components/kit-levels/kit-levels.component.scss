@@ -1,0 +1,82 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.levels-header {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  text-align: center;
+}
+.levels-header .section-title {
+  margin-bottom: var(--space-1);
+}
+.levels-header .lead {
+  color: var(--color-muted);
+}
+.levels-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.level {
+  --level-color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-cream);
+}
+.level--yellow {
+  --level-color: var(--color-yellow-dark);
+}
+.level--olive {
+  --level-color: var(--color-green-dark);
+}
+.level-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: var(--color-surface);
+  background: var(--level-color);
+}
+.level-icon app-icon {
+  width: 26px;
+  height: 26px;
+}
+h3 {
+  font-size: var(--fs-h3);
+  font-weight: 900;
+}
+p {
+  line-height: 1.6;
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .levels-header {
+    justify-items: start;
+    text-align: left;
+  }
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  .levels-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+  .level {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 4px var(--space-2);
+    padding: var(--space-3);
+  }
+  .level-icon {
+    grid-row: span 2;
+  }
+}

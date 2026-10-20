@@ -1,0 +1,35 @@
+<section class="development-areas" aria-labelledby="areas-title">
+  <h2 id="areas-title" class="section-title">
+    Áreas de desarrollo que trabajamos
+  </h2>
+  <!-- Explicit roles keep table semantics when the mobile layout changes display values. -->
+  <table role="table" aria-labelledby="areas-title">
+    <thead role="rowgroup">
+      <tr role="row">
+        <th role="columnheader" scope="col">Área</th>
+        <th role="columnheader" scope="col">Descripción</th>
+        <th role="columnheader" scope="col">Tipo de actividad</th>
+      </tr>
+    </thead>
+    <tbody role="rowgroup">
+      @for (area of areas; track area.name) {
+        <tr role="row" [class]="'area area--' + area.tone">
+          <th role="rowheader" scope="row">
+            <span class="area-name">
+              <span class="area-icon"><app-icon [name]="area.icon" /></span
+              >{{ area.name }}
+            </span>
+          </th>
+          <td role="cell">{{ area.description }}</td>
+          <td role="cell">
+            <ul class="activity-types">
+              @for (activity of area.activities; track activity.label) {
+                <li><app-icon [name]="activity.icon" />{{ activity.label }}</li>
+              }
+            </ul>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

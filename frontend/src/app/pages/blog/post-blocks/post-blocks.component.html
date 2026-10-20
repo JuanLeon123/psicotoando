@@ -1,0 +1,103 @@
+@for (block of blocks(); track $index) {
+  @switch (block.type) {
+    @case ("paragraph") {
+      <p class="block-paragraph">{{ block.text }}</p>
+    }
+    @case ("heading") {
+      <h2 class="block-heading">{{ block.text }}</h2>
+    }
+    @case ("image") {
+      <figure class="block-figure">
+        <button
+          class="zoomable"
+          type="button"
+          [attr.aria-label]="'Ampliar imagen: ' + block.alt"
+          (click)="openImage(block)"
+        >
+          <img [src]="block.url" [alt]="block.alt" loading="lazy" decoding="async" />
+        </button>
+        @if (block.caption) {
+          <figcaption>{{ block.caption }}</figcaption>
+        }
+      </figure>
+    }
+    @case ("gallery") {
+      <ul class="block-gallery" [class.is-pair]="block.images.length === 2">
+        @for (image of block.images; track $index) {
+          <li>
+            <button
+              class="zoomable"
+              type="button"
+              [attr.aria-label]="'Ampliar imagen: ' + image.alt"
+              (click)="openImage(image)"
+            >
+              <img [src]="image.url" [alt]="image.alt" loading="lazy" decoding="async" />
+            </button>
+          </li>
+        }
+      </ul>
+    }
+    @case ("video") {
+      <figure class="block-figure">
+        <video class="block-video" [src]="block.url" controls preload="metadata" playsinline>
+          Tu navegador no puede reproducir este video.
+        </video>
+        @if (block.caption) {
+          <figcaption>{{ block.caption }}</figcaption>
+        }
+      </figure>
+    }
+    @case ("youtube") {
+      @if (youtubeEmbed(block.videoId); as src) {
+        <figure class="block-figure">
+          <div class="embed">
+            <iframe
+              [src]="src"
+              [title]="block.caption || 'Video de YouTube'"
+              loading="lazy"
+              allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+            ></iframe>
+          </div>
+          @if (block.caption) {
+            <figcaption>{{ block.caption }}</figcaption>
+          }
+        </figure>
+      }
+    }
+    @case ("quote") {
+      <blockquote class="block-quote">
+        <p>{{ block.text }}</p>
+        @if (block.author) {
+          <footer>— {{ block.author }}</footer>
+        }
+      </blockquote>
+    }
+    @case ("list") {
+      <ul class="block-list">
+        @for (item of block.items; track $index) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    }
+  }
+}
+
+<dialog
+  #lightbox
+  class="lightbox"
+  aria-label="Imagen ampliada"
+  (click)="onLightboxClick($event)"
+  (close)="zoomed.set(null)"
+>
+  @if (zoomed(); as image) {
+    <button class="lightbox-close" type="button" aria-label="Cerrar imagen" (click)="closeImage()">
+      <app-icon name="close" />
+    </button>
+    <img [src]="image.url" [alt]="image.alt" />
+    @if (image.alt) {
+      <p>{{ image.alt }}</p>
+    }
+  }
+</dialog>

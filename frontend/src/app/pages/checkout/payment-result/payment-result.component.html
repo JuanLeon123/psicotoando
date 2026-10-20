@@ -1,0 +1,126 @@
+<div class="result page">
+  <div class="container result-inner">
+    @switch (state().kind) {
+      @case ("missing") {
+        <div class="result-card">
+          <span class="result-icon" aria-hidden="true"><app-icon name="cart" /></span>
+          <h1>No encontramos un pago para mostrar</h1>
+          <p>
+            Esta página muestra el resultado después de pagar con Wompi. Si ya
+            pagaste, revisa tu correo: ahí te llega la confirmación.
+          </p>
+          <div class="result-actions">
+            <a class="button button--primary" routerLink="/tienda">Ir a la tienda</a>
+            <a class="button button--outline" routerLink="/carrito">Ver mi carrito</a>
+          </div>
+        </div>
+      }
+      @case ("loading") {
+        <div class="result-card" role="status">
+          <span class="result-icon is-waiting" aria-hidden="true"><app-icon name="clipboard" /></span>
+          <h1>Estamos confirmando tu pago…</h1>
+          <p>Esto toma solo unos segundos.</p>
+        </div>
+      }
+      @case ("error") {
+        <div class="result-card" role="alert">
+          <span class="result-icon is-bad" aria-hidden="true"><app-icon name="close" /></span>
+          <h1>No pudimos consultar tu pago</h1>
+          <p>
+            Puede ser un problema de conexión. Si el cobro se hizo, te llegará
+            un correo de confirmación.
+          </p>
+          <div class="result-actions">
+            <button class="button button--primary" type="button" (click)="refresh()">
+              Intentar de nuevo
+            </button>
+            <a class="button button--outline" routerLink="/carrito">Volver al carrito</a>
+          </div>
+        </div>
+      }
+      @default {
+        @if (order(); as order) {
+          <div class="result-card" [attr.data-status]="order.status">
+            @switch (order.status) {
+              @case ("approved") {
+                <span class="result-icon is-good" aria-hidden="true"><app-icon name="heart" /></span>
+                <p class="eyebrow">Pago aprobado</p>
+                <h1>¡Gracias por tu compra!</h1>
+                <p>
+                  Ya estamos preparando tu pedido. Te enviamos la confirmación a
+                  <strong>{{ order.emailMasked }}</strong>.
+                </p>
+              }
+              @case ("pending") {
+                <span class="result-icon is-waiting" aria-hidden="true"><app-icon name="clipboard" /></span>
+                <p class="eyebrow">Pago en proceso</p>
+                <h1>Tu pago está en revisión</h1>
+                <p>
+                  Algunos medios, como PSE o el pago en efectivo, tardan un poco
+                  más. Te escribiremos a <strong>{{ order.emailMasked }}</strong>
+                  cuando se confirme.
+                </p>
+                <p class="status-line" role="status">
+                  @if (stoppedPolling()) {
+                    Aún no tenemos respuesta del banco.
+                    <button class="text-button" type="button" (click)="refresh()">
+                      Actualizar
+                    </button>
+                  } @else {
+                    Consultando de nuevo en unos segundos…
+                  }
+                </p>
+              }
+              @default {
+                <span class="result-icon is-bad" aria-hidden="true"><app-icon name="close" /></span>
+                <p class="eyebrow">
+                  {{ order.status === "declined" ? "Pago rechazado" : order.status === "voided" ? "Pago anulado" : "Error en el pago" }}
+                </p>
+                <h1>No se completó el pago</h1>
+                <p>
+                  No se hizo ningún cobro. Tus productos siguen en el carrito
+                  para que lo intentes de nuevo, con otra tarjeta o medio de pago.
+                </p>
+                <div class="result-actions">
+                  <a class="button button--primary" routerLink="/carrito">Volver al carrito</a>
+                </div>
+              }
+            }
+
+            <section class="order-box" aria-labelledby="order-title">
+              <h2 id="order-title">Pedido {{ order.reference }}</h2>
+              <ul class="order-lines">
+                @for (line of order.items; track $index) {
+                  <li>
+                    <span>{{ line.quantity }} × {{ line.name }}</span>
+                    <span>{{ formatCop(line.lineTotalCop) }}</span>
+                  </li>
+                }
+              </ul>
+              <dl class="order-totals">
+                <div><dt>Subtotal</dt><dd>{{ formatCop(order.subtotalCop) }}</dd></div>
+                <div>
+                  <dt>Envío</dt>
+                  <dd>{{ order.shippingCop ? formatCop(order.shippingCop) : "Gratis" }}</dd>
+                </div>
+                <div class="order-total"><dt>Total</dt><dd>{{ formatCop(order.totalCop) }}</dd></div>
+                @if (order.paymentMethod) {
+                  <div><dt>Medio de pago</dt><dd>{{ paymentMethodLabel(order.paymentMethod) }}</dd></div>
+                }
+              </dl>
+            </section>
+
+            @if (order.status === "approved") {
+              <div class="result-actions">
+                <a class="button button--primary" routerLink="/tienda">Seguir explorando</a>
+                <a class="button button--outline" routerLink="/recursos-para-familias"
+                  >Recursos para familias</a
+                >
+              </div>
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+</div>

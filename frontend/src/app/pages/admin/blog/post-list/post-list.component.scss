@@ -1,0 +1,119 @@
+@use "../../../../../styles/tokens" as tokens;
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.search {
+  position: relative;
+  flex: 1 1 320px;
+  max-width: 440px;
+}
+.search app-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  width: 20px;
+  height: 20px;
+  color: var(--color-muted);
+  transform: translateY(-50%);
+}
+.search .form-input {
+  padding-left: 44px;
+}
+.count {
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+.post-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  list-style: none;
+  overflow: hidden;
+}
+.post-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto auto;
+  gap: var(--space-2);
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-line);
+}
+.post-row:last-child {
+  border-bottom: 0;
+}
+.thumb {
+  width: 88px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--color-cream);
+}
+.thumb--empty {
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+}
+.post-info {
+  min-width: 0;
+}
+.post-title {
+  color: var(--color-heading);
+  font-weight: 800;
+}
+.post-title:hover {
+  color: var(--color-primary);
+}
+.post-meta {
+  margin-top: 2px;
+  color: var(--color-muted);
+  font-size: 14px;
+}
+.row-actions {
+  display: flex;
+  gap: 4px;
+}
+.icon-action {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-heading);
+}
+.icon-action:hover {
+  background: var(--color-cream);
+}
+.icon-action app-icon {
+  width: 20px;
+  height: 20px;
+}
+.icon-action--danger {
+  color: var(--color-coral-dark);
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .post-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+  .thumb {
+    width: 64px;
+    height: 48px;
+  }
+  .badge {
+    justify-self: start;
+    grid-column: 2;
+  }
+  .row-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}

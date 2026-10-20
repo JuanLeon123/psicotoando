@@ -1,0 +1,125 @@
+<app-auth-layout
+  heading="Crea tu cuenta"
+  intro="Regístrate para guardar tus datos, seguir tus pedidos y recibir acompañamiento."
+>
+  <form class="form-stack" novalidate (ngSubmit)="submit()" [formGroup]="form">
+    <div class="live-region" aria-live="assertive">
+      @if (serverError()) {
+        <p class="form-alert form-alert--error">
+          {{ serverError() }}
+          @if (emailTaken()) {
+            <a class="text-link" routerLink="/iniciar-sesion">Inicia sesión</a>
+          }
+        </p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="register-fullName">Nombre completo</label>
+      <input
+        class="form-input"
+        id="register-fullName"
+        type="text"
+        formControlName="fullName"
+        autocomplete="name"
+        maxlength="120"
+        aria-required="true"
+        [attr.aria-invalid]="!!errorFor('fullName')"
+        [attr.aria-describedby]="describedBy('fullName')"
+      />
+      @if (errorFor("fullName"); as message) {
+        <p class="form-error" id="register-fullName-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="register-email">Correo electrónico</label>
+      <input
+        class="form-input"
+        id="register-email"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        inputmode="email"
+        autocapitalize="off"
+        spellcheck="false"
+        maxlength="254"
+        aria-required="true"
+        [attr.aria-invalid]="!!errorFor('email')"
+        [attr.aria-describedby]="describedBy('email')"
+      />
+      @if (errorFor("email"); as message) {
+        <p class="form-error" id="register-email-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="register-password">Contraseña</label>
+      <app-password-field
+        inputId="register-password"
+        [control]="form.controls.password"
+        autocomplete="new-password"
+        [invalid]="!!errorFor('password')"
+        [describedBy]="describedBy('password', 'register-password-hint') ?? ''"
+      />
+      <p class="form-hint" id="register-password-hint">
+        Mínimo 8 caracteres, con al menos una letra y un número.
+      </p>
+      @if (errorFor("password"); as message) {
+        <p class="form-error" id="register-password-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="register-confirmPassword"
+        >Confirma tu contraseña</label
+      >
+      <app-password-field
+        inputId="register-confirmPassword"
+        [control]="form.controls.confirmPassword"
+        autocomplete="new-password"
+        [invalid]="!!errorFor('confirmPassword')"
+        [describedBy]="describedBy('confirmPassword') ?? ''"
+      />
+      @if (errorFor("confirmPassword"); as message) {
+        <p class="form-error" id="register-confirmPassword-error">
+          {{ message }}
+        </p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-check" for="register-acceptPrivacy">
+        <input
+          id="register-acceptPrivacy"
+          type="checkbox"
+          formControlName="acceptPrivacy"
+          aria-required="true"
+          [attr.aria-invalid]="!!errorFor('acceptPrivacy')"
+          [attr.aria-describedby]="describedBy('acceptPrivacy')"
+        />
+        <span
+          >Acepto el tratamiento de mis datos personales para gestionar mi
+          cuenta y el acompañamiento de Psico T.O ando.</span
+        >
+      </label>
+      @if (errorFor("acceptPrivacy"); as message) {
+        <p class="form-error" id="register-acceptPrivacy-error">
+          {{ message }}
+        </p>
+      }
+    </div>
+    <button
+      class="button button--primary form-submit"
+      type="submit"
+      [attr.aria-disabled]="pending() || null"
+    >
+      {{ pending() ? "Creando tu cuenta…" : "Crear cuenta" }}
+    </button>
+  </form>
+  <app-google-sign-in-button text="signup_with" [returnUrl]="returnUrl" />
+  <p class="auth-switch">
+    ¿Ya tienes cuenta?
+    <a
+      class="text-link"
+      routerLink="/iniciar-sesion"
+      [queryParams]="returnUrl ? { returnUrl } : {}"
+      >Inicia sesión</a
+    >
+  </p>
+</app-auth-layout>

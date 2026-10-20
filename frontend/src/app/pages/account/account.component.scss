@@ -1,0 +1,107 @@
+@use "../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.account-page {
+  display: grid;
+  gap: 22px;
+  width: min(100% - 48px, 1080px);
+  margin-inline: auto;
+  padding-block: 24px 80px;
+}
+.account-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 22px;
+  padding: 24px 28px;
+  border-radius: 32px;
+  background: var(--color-cream);
+}
+.account-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: 50%;
+  color: var(--color-surface);
+  background: var(--color-primary);
+  font-size: 32px;
+  font-weight: 900;
+}
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.account-greeting {
+  display: grid;
+  flex: 1 1 260px;
+  gap: 4px;
+  min-width: 0;
+}
+h1 {
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+.account-email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  color: var(--color-navy);
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.google-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  color: var(--color-green-dark);
+  background: var(--color-leaf-pale);
+  font-size: 13px;
+  font-weight: 800;
+}
+.google-badge app-icon {
+  width: 16px;
+  height: 16px;
+}
+.account-orders {
+  margin-top: 22px;
+}
+.account-sections {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  .account-sections {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .account-page {
+    width: min(100% - 32px, 1080px);
+    padding-block: 12px 56px;
+  }
+  .account-header {
+    padding: 20px;
+    border-radius: 24px;
+  }
+  .account-avatar {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+  }
+  .logout-button {
+    width: 100%;
+  }
+}

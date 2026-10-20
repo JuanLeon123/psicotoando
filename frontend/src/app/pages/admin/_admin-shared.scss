@@ -1,0 +1,144 @@
+// Piezas comunes de las páginas del panel: cabecera, tarjetas, estados y botones.
+:host {
+  display: block;
+}
+.admin-page {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 1120px;
+}
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.page-header h1 {
+  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.page-intro {
+  max-width: var(--measure);
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.panel {
+  padding: var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.panel h2 {
+  font-size: var(--fs-h3);
+  font-weight: 800;
+}
+.panel-intro {
+  margin-top: 4px;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-3);
+  border: 1px dashed var(--color-line);
+  border-radius: var(--radius-card);
+  color: var(--color-muted);
+  text-align: center;
+}
+.state h2 {
+  color: var(--color-heading);
+  font-size: var(--fs-h3);
+}
+.state p {
+  max-width: 46ch;
+  line-height: 1.6;
+}
+.state-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: var(--color-primary);
+  background: var(--color-cream);
+}
+.button--small {
+  min-height: 44px;
+  padding: 8px 18px;
+  font-size: 14px;
+}
+.button--ghost {
+  color: var(--color-heading);
+  border-color: var(--color-line);
+  background: var(--color-surface);
+}
+.button--ghost:hover {
+  background: var(--color-cream);
+}
+.button--danger {
+  color: var(--color-surface);
+  background: var(--color-coral-dark);
+}
+.button--danger:hover {
+  background: var(--color-heading);
+}
+.button app-icon {
+  width: 20px;
+  height: 20px;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.badge--published {
+  color: var(--color-green-dark);
+  background: var(--color-leaf-pale);
+}
+.badge--draft {
+  color: var(--color-muted);
+  background: var(--color-cream);
+}
+.confirm-dialog {
+  width: min(100% - 32px, 440px);
+  padding: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-card);
+  box-shadow: 0 24px 60px var(--color-shadow-dialog);
+}
+.confirm-dialog::backdrop {
+  background: var(--color-backdrop);
+}
+.confirm-dialog h2 {
+  font-size: var(--fs-h3);
+}
+.confirm-dialog p {
+  margin-top: var(--space-1);
+  line-height: 1.6;
+}
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}

@@ -1,0 +1,16 @@
+<section
+  class="benefits container"
+  aria-labelledby="benefits-title"
+  id="nuestra-propuesta"
+>
+  <h2 id="benefits-title" class="sr-only">Nuestra forma de acompañarte</h2>
+  <ul class="benefit-list">
+    @for (benefit of benefits; track benefit.icon) {
+      <li class="benefit" [class]="'benefit benefit--' + benefit.tone">
+        <span class="benefit-icon"><app-icon [name]="benefit.icon" /></span>
+        <h3>{{ benefit.title }}</h3>
+        <p>{{ benefit.description }}</p>
+      </li>
+    }
+  </ul>
+</section>

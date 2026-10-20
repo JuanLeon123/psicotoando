@@ -1,0 +1,29 @@
+<article class="kit-card">
+  <button
+    class="kit-link"
+    type="button"
+    (click)="selected.emit(kit())"
+    [attr.aria-label]="'Ver ' + kit().name"
+  >
+    <span class="kit-image">
+      @if (kit().imageUrl; as src) {
+        <img
+          [src]="src"
+          [alt]="kit().imageAlt"
+          width="560"
+          height="480"
+          loading="lazy"
+          decoding="async"
+        />
+      }
+    </span>
+    <span class="kit-info"
+      ><span
+        ><span class="kit-name">{{ kit().name }}</span
+        >@if (kit().activities !== null) {
+          <span class="kit-count">{{ kit().activities }} actividades</span>
+        }<span class="kit-price">{{ price() }}</span></span
+      ><app-icon name="arrow"
+    /></span>
+  </button>
+</article>

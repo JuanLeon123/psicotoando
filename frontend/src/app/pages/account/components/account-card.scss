@@ -1,0 +1,40 @@
+// Shared look for the account page sections.
+:host {
+  display: block;
+}
+.account-card {
+  display: grid;
+  gap: 20px;
+  padding: 28px;
+  border: 1px solid var(--color-line);
+  border-radius: 28px;
+  background: var(--color-surface);
+  box-shadow: 0 10px 30px var(--color-shadow-soft);
+}
+.card-header {
+  display: grid;
+  gap: 6px;
+}
+h2 {
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 900;
+}
+.card-intro {
+  color: var(--color-navy);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+@media (max-width: 640px) {
+  .account-card {
+    padding: 22px 18px;
+    border-radius: 22px;
+  }
+  .form-actions .button {
+    width: 100%;
+  }
+}

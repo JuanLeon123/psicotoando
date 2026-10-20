@@ -1,0 +1,151 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Blog</h1>
+      <p class="page-intro">
+        Escribe artículos con texto, fotos y videos. Los publicados aparecen en
+        el blog de la web; los borradores solo se ven aquí.
+      </p>
+    </div>
+    <a class="button button--primary button--small" routerLink="/admin/blog/nuevo"
+      ><app-icon name="pencil" />Nuevo artículo</a
+    >
+  </header>
+
+  <div class="live-region" aria-live="polite">
+    @if (message(); as text) {
+      <p class="form-alert form-alert--success">{{ text }}</p>
+    }
+    @if (error(); as text) {
+      <p class="form-alert form-alert--error">{{ text }}</p>
+    }
+  </div>
+
+  @switch (state()) {
+    @case ("loading") {
+      <p class="state" aria-busy="true">Cargando artículos…</p>
+    }
+    @case ("error") {
+      <div class="state">
+        <h2>No pudimos cargar los artículos</h2>
+        <button class="button button--ghost button--small" type="button" (click)="load()">
+          Reintentar
+        </button>
+      </div>
+    }
+    @default {
+      @if (posts().length === 0) {
+        <section class="state" aria-labelledby="empty-title">
+          <span class="state-icon"><app-icon name="lightbulb" /></span>
+          <h2 id="empty-title">Aún no hay artículos</h2>
+          <p>Escribe el primero: puedes combinar texto, fotos, galerías y videos.</p>
+          <a class="button button--primary button--small" routerLink="/admin/blog/nuevo"
+            >Escribir artículo</a
+          >
+        </section>
+      } @else {
+        <div class="toolbar">
+          <label class="search">
+            <span class="sr-only">Buscar artículos</span>
+            <app-icon name="search" />
+            <input
+              class="form-input"
+              type="search"
+              placeholder="Buscar por título, resumen o categoría"
+              [value]="query()"
+              (input)="query.set($any($event.target).value)"
+            />
+          </label>
+          <p class="count" aria-live="polite">
+            {{ filtered().length }} {{ filtered().length === 1 ? "artículo" : "artículos" }}
+          </p>
+        </div>
+
+        @if (filtered().length === 0) {
+          <p class="state">Ningún artículo coincide con «{{ query() }}».</p>
+        } @else {
+          <ul class="post-list">
+            @for (post of filtered(); track post.id) {
+              <li class="post-row">
+                @if (post.coverUrl) {
+                  <img class="thumb" [src]="post.coverUrl" alt="" loading="lazy" />
+                } @else {
+                  <span class="thumb thumb--empty" aria-hidden="true"><app-icon name="lightbulb" /></span>
+                }
+                <div class="post-info">
+                  <a class="post-title" [routerLink]="['/admin/blog', post.id]">{{ post.title }}</a>
+                  <p class="post-meta">
+                    @if (post.category) {
+                      <span>{{ post.category }}</span> ·
+                    }
+                    @if (post.publishedAt) {
+                      {{ isScheduled(post) ? "Programado para el" : "" }} {{ formatDate(post.publishedAt) }}
+                    } @else {
+                      Sin publicar
+                    }
+                    · {{ post.blocks.length }} {{ post.blocks.length === 1 ? "bloque" : "bloques" }}
+                  </p>
+                </div>
+                <span
+                  class="badge"
+                  [class.badge--published]="post.status === 'published'"
+                  [class.badge--draft]="post.status === 'draft'"
+                  >{{ post.status === "published" ? (isScheduled(post) ? "Programado" : "Publicado") : "Borrador" }}</span
+                >
+                <div class="row-actions">
+                  @if (post.status === "published" && !isScheduled(post)) {
+                    <a
+                      class="icon-action"
+                      [routerLink]="['/blog', post.slug]"
+                      target="_blank"
+                      [attr.aria-label]="'Ver «' + post.title + '» en la web (se abre en otra pestaña)'"
+                      ><app-icon name="eye"
+                    /></a>
+                  }
+                  <a
+                    class="icon-action"
+                    [routerLink]="['/admin/blog', post.id]"
+                    [attr.aria-label]="'Editar ' + post.title"
+                    ><app-icon name="pencil"
+                  /></a>
+                  <button
+                    class="icon-action icon-action--danger"
+                    type="button"
+                    [attr.aria-label]="'Eliminar ' + post.title"
+                    (click)="askDelete(post)"
+                  >
+                    <app-icon name="close" />
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      }
+    }
+  }
+</div>
+
+<dialog #confirmDialog class="confirm-dialog" aria-labelledby="delete-title" (close)="toDelete.set(null)">
+  @if (toDelete(); as post) {
+    <h2 id="delete-title">¿Eliminar «{{ post.title }}»?</h2>
+    <p>
+      Desaparecerá del blog y del panel. Las fotos y videos se quedan en la
+      biblioteca por si quieres usarlos en otro artículo. Esta acción no se
+      puede deshacer.
+    </p>
+    <div class="dialog-actions">
+      <button class="button button--ghost button--small" type="button" (click)="cancelDelete()">
+        Cancelar
+      </button>
+      <button
+        class="button button--danger button--small"
+        type="button"
+        [attr.aria-disabled]="busyId() === post.id"
+        (click)="busyId() === post.id || confirmDelete()"
+      >
+        {{ busyId() === post.id ? "Eliminando…" : "Eliminar" }}
+      </button>
+    </div>
+  }
+</dialog>

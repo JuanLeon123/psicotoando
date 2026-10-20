@@ -1,0 +1,27 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <aside class="auth-visual" aria-hidden="true">
+      <img
+        ngSrc="images/family-play.webp"
+        fill
+        priority
+        sizes="(max-width: 900px) 1vw, 42vw"
+        alt=""
+      />
+      <p class="visual-note">
+        <app-icon name="heart" />Juego con sentido, gratificante y
+        reconfortante.
+      </p>
+    </aside>
+    <section class="auth-content" aria-labelledby="auth-title">
+      <header class="auth-header">
+        <p class="eyebrow">Tu espacio en familia</p>
+        <h1 id="auth-title">{{ heading() }}</h1>
+        @if (intro()) {
+          <p class="auth-intro">{{ intro() }}</p>
+        }
+      </header>
+      <ng-content />
+    </section>
+  </div>
+</div>

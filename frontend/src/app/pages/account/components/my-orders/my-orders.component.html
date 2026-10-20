@@ -1,0 +1,49 @@
+<section class="account-card" aria-labelledby="my-orders-title">
+  <header class="card-header">
+    <h2 id="my-orders-title">Mis pedidos</h2>
+    <p class="card-intro">
+      Los pedidos que hiciste con tu cuenta iniciada.
+    </p>
+  </header>
+  @switch (state().kind) {
+    @case ("loading") {
+      <p class="muted" role="status">Cargando tus pedidos…</p>
+    }
+    @case ("error") {
+      <p class="muted" role="alert">
+        No pudimos cargar tus pedidos. Recarga la página en un momento.
+      </p>
+    }
+    @default {
+      @if (state(); as s) {
+        @if (s.kind === "ready" && s.orders.length) {
+          <ul class="order-list">
+            @for (order of s.orders; track order.id) {
+              <li class="order-row">
+                <div>
+                  <p class="order-ref">{{ order.reference }}</p>
+                  <p class="muted">
+                    {{ formatDate(order.createdAt) }}
+                    · {{ order.itemCount }}
+                    {{ order.itemCount === 1 ? "producto" : "productos" }}
+                  </p>
+                </div>
+                <div class="order-side">
+                  <span class="order-status" [attr.data-status]="order.status">{{
+                    statusLabel(order)
+                  }}</span>
+                  <strong>{{ formatCop(order.totalCop) }}</strong>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="muted">
+            Aún no tienes pedidos.
+            <a routerLink="/tienda">Conoce nuestros kits</a>.
+          </p>
+        }
+      }
+    }
+  }
+</section>

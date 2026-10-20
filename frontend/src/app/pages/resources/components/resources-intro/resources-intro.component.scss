@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+.resources-intro {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 760px;
+}
+h1 {
+  font-size: var(--fs-h1);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+.accent {
+  color: var(--color-coral-dark);
+}
+.lead {
+  color: var(--color-muted);
+}

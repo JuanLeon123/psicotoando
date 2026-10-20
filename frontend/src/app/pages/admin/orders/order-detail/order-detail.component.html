@@ -1,0 +1,149 @@
+<div class="admin-page">
+  <a class="back-link" routerLink="/admin/pedidos"
+    ><app-icon name="arrow" class="back-icon" />Volver a pedidos</a
+  >
+
+  @if (order(); as order) {
+    <header class="page-header">
+      <div>
+        <h1 class="reference">{{ order.reference }}</h1>
+        <p class="page-intro">Creado el {{ formatDateTime(order.createdAt) }}</p>
+      </div>
+      <div class="badges">
+        <span class="badge" [class]="'badge badge--' + order.status">{{
+          paymentLabels[order.status]
+        }}</span>
+        @if (order.status === "approved") {
+          <span class="badge" [class]="'badge badge--' + order.fulfillment">{{
+            fulfillmentLabels[order.fulfillment]
+          }}</span>
+        }
+      </div>
+    </header>
+
+    <div class="detail-grid">
+      <div class="detail-main">
+        <section class="panel" aria-labelledby="items-title">
+          <h2 id="items-title">Productos</h2>
+          <ul class="lines">
+            @for (line of order.items; track $index) {
+              <li>
+                <span
+                  >{{ line.quantity }} × {{ line.name }}
+                  <small>{{ formatCop(line.unitPriceCop) }} c/u</small></span
+                >
+                <strong>{{ formatCop(line.lineTotalCop) }}</strong>
+              </li>
+            }
+          </ul>
+          <dl class="totals">
+            <div><dt>Subtotal</dt><dd>{{ formatCop(order.subtotalCop) }}</dd></div>
+            <div>
+              <dt>Envío</dt>
+              <dd>{{ order.shippingCop ? formatCop(order.shippingCop) : "Gratis" }}</dd>
+            </div>
+            <div class="total"><dt>Total</dt><dd>{{ formatCop(order.totalCop) }}</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel" aria-labelledby="customer-title">
+          <h2 id="customer-title">Cliente y envío</h2>
+          <dl class="facts">
+            <div><dt>Nombre</dt><dd>{{ order.customerName }}</dd></div>
+            <div><dt>Correo</dt><dd>{{ order.customerEmail }}</dd></div>
+            <div><dt>Celular</dt><dd>{{ order.customerPhone }}</dd></div>
+            <div><dt>Cédula</dt><dd>{{ order.customerDocument }}</dd></div>
+            <div>
+              <dt>Dirección</dt>
+              <dd>
+                {{ order.shipping.address }}<br />{{ order.shipping.city }},
+                {{ order.shipping.department }}
+              </dd>
+            </div>
+            @if (order.shipping.notes) {
+              <div><dt>Indicaciones</dt><dd>{{ order.shipping.notes }}</dd></div>
+            }
+            <div>
+              <dt>Cuenta</dt>
+              <dd>{{ order.userId ? "Cliente registrado" : "Compra sin cuenta" }}</dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+
+      <aside class="detail-side">
+        <section class="panel" aria-labelledby="fulfillment-title">
+          <h2 id="fulfillment-title">Envío</h2>
+          @if (order.status === "approved") {
+            <div class="form-field">
+              <label class="form-label" for="order-fulfillment">Estado del envío</label>
+              <select
+                class="form-input"
+                id="order-fulfillment"
+                [value]="fulfillment()"
+                (change)="fulfillment.set($any($event.target).value)"
+              >
+                @for (option of fulfillmentOptions; track option[0]) {
+                  <option [value]="option[0]">{{ option[1] }}</option>
+                }
+              </select>
+            </div>
+            <button
+              class="button button--primary button--small save-button"
+              type="button"
+              [attr.aria-disabled]="saving() || fulfillment() === order.fulfillment || null"
+              (click)="fulfillment() !== order.fulfillment && saveFulfillment()"
+            >
+              {{ saving() ? "Guardando…" : "Guardar estado" }}
+            </button>
+            <div class="live-region" aria-live="polite">
+              @if (message(); as text) {
+                <p class="form-alert form-alert--success">{{ text }}</p>
+              }
+              @if (saveError(); as text) {
+                <p class="form-alert form-alert--error">{{ text }}</p>
+              }
+            </div>
+          } @else {
+            <p class="panel-intro">
+              El envío se gestiona cuando el pago está aprobado.
+            </p>
+          }
+        </section>
+
+        <section class="panel" aria-labelledby="payment-title">
+          <h2 id="payment-title">Pago</h2>
+          <dl class="facts">
+            <div><dt>Estado</dt><dd>{{ paymentLabels[order.status] }}</dd></div>
+            <div><dt>Medio</dt><dd>{{ paymentMethodLabel(order.paymentMethod) }}</dd></div>
+            <div><dt>Pagado el</dt><dd>{{ formatDateTime(order.paidAt) }}</dd></div>
+            <div>
+              <dt>Transacción Wompi</dt>
+              <dd class="mono">{{ order.wompiTransactionId ?? "—" }}</dd>
+            </div>
+          </dl>
+          @if (order.wompiTransactionId; as transactionId) {
+            <a
+              class="text-link"
+              [href]="wompiUrl(transactionId)"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Ver en Wompi</a
+            >
+          }
+        </section>
+      </aside>
+    </div>
+  } @else {
+    @if (loadError(); as error) {
+      <div class="state" role="alert">
+        <h2>{{ error }}</h2>
+        <button class="button button--ghost button--small" type="button" (click)="load()">
+          Reintentar
+        </button>
+      </div>
+    } @else {
+      <p class="state" aria-busy="true">Cargando pedido…</p>
+    }
+  }
+</div>

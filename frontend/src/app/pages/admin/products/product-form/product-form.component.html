@@ -1,0 +1,375 @@
+<div class="admin-page">
+  <a class="back-link" routerLink="/admin/productos"
+    ><app-icon name="arrow" />Volver a productos</a
+  >
+  <header class="page-header">
+    <div>
+      <h1>{{ productId ? "Editar producto" : "Nuevo producto" }}</h1>
+      <p class="page-intro">
+        Lo que guardes aquí es exactamente lo que verán tus clientes en la
+        tienda cuando el producto esté publicado.
+      </p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <p class="state" aria-busy="true">Cargando producto…</p>
+  } @else if (loadError()) {
+    <div class="state">
+      <h2>{{ loadError() }}</h2>
+      <a class="button button--ghost button--small" routerLink="/admin/productos"
+        >Volver a productos</a
+      >
+    </div>
+  } @else {
+    <form class="editor" novalidate [formGroup]="form" (ngSubmit)="submit()">
+      <div class="editor-main">
+        <div class="live-region" aria-live="polite">
+          @if (serverError(); as message) {
+            <p class="form-alert form-alert--error">{{ message }}</p>
+          }
+          @if (savedMessage(); as message) {
+            <p class="form-alert form-alert--success">{{ message }}</p>
+          }
+        </div>
+
+        <section class="panel form-stack" aria-labelledby="basics-title">
+          <h2 id="basics-title">Información</h2>
+          <div class="form-field">
+            <label class="form-label" for="product-name">Nombre</label>
+            <input
+              class="form-input"
+              id="product-name"
+              type="text"
+              formControlName="name"
+              maxlength="120"
+              aria-required="true"
+              [attr.aria-invalid]="!!errorFor('name')"
+              [attr.aria-describedby]="errorFor('name') ? 'product-name-error' : null"
+            />
+            @if (errorFor("name"); as message) {
+              <p class="form-error" id="product-name-error">{{ message }}</p>
+            }
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="product-summary">Descripción corta</label>
+            <textarea
+              class="form-input"
+              id="product-summary"
+              rows="3"
+              formControlName="summary"
+              maxlength="500"
+              aria-required="true"
+              aria-describedby="product-summary-hint"
+              [attr.aria-invalid]="!!errorFor('summary')"
+            ></textarea>
+            <p class="form-hint" id="product-summary-hint">
+              Entre 10 y 500 caracteres. Se muestra en la tarjeta y en la ficha
+              del producto.
+            </p>
+            @if (errorFor("summary"); as message) {
+              <p class="form-error" id="product-summary-error">{{ message }}</p>
+            }
+          </div>
+        </section>
+
+        <section class="panel form-stack" aria-labelledby="sale-title">
+          <h2 id="sale-title">Venta</h2>
+          <div class="field-row">
+            <div class="form-field">
+              <label class="form-label" for="product-priceCop"
+                >Precio en pesos <span class="form-optional">(opcional)</span></label
+              >
+              <div class="prefixed">
+                <span aria-hidden="true">$</span>
+                <input
+                  class="form-input"
+                  id="product-priceCop"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  formControlName="priceCop"
+                  aria-describedby="product-priceCop-hint"
+                  [attr.aria-invalid]="!!errorFor('priceCop')"
+                  (blur)="tidyPrice()"
+                />
+              </div>
+              <p class="form-hint" id="product-priceCop-hint">
+                Sin decimales. Si lo dejas vacío, la tienda muestra «Precio
+                próximamente».
+              </p>
+              @if (errorFor("priceCop"); as message) {
+                <p class="form-error">{{ message }}</p>
+              }
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="product-stock"
+                >Inventario <span class="form-optional">(opcional)</span></label
+              >
+              <input
+                class="form-input"
+                id="product-stock"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                formControlName="stock"
+                aria-describedby="product-stock-hint"
+                [attr.aria-invalid]="!!errorFor('stock')"
+              />
+              <p class="form-hint" id="product-stock-hint">
+                Unidades disponibles. Vacío = no se controla; con 0 se muestra
+                como agotado.
+              </p>
+              @if (errorFor("stock"); as message) {
+                <p class="form-error">{{ message }}</p>
+              }
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <label class="form-label" for="product-activities"
+                >Número de actividades
+                <span class="form-optional">(opcional)</span></label
+              >
+              <input
+                class="form-input"
+                id="product-activities"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                formControlName="activities"
+                [attr.aria-invalid]="!!errorFor('activities')"
+              />
+              @if (errorFor("activities"); as message) {
+                <p class="form-error">{{ message }}</p>
+              }
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="product-sortOrder">Orden en la tienda</label>
+              <input
+                class="form-input"
+                id="product-sortOrder"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                formControlName="sortOrder"
+                aria-describedby="product-sortOrder-hint"
+                [attr.aria-invalid]="!!errorFor('sortOrder')"
+              />
+              <p class="form-hint" id="product-sortOrder-hint">
+                Los números más bajos aparecen primero.
+              </p>
+              @if (errorFor("sortOrder"); as message) {
+                <p class="form-error">{{ message }}</p>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="panel form-stack" aria-labelledby="contents-title">
+          <div>
+            <h2 id="contents-title">Qué incluye</h2>
+            <p class="panel-intro">
+              Una línea por elemento (hasta {{ maxContents }}). Se muestran como
+              lista en la ficha del producto.
+            </p>
+          </div>
+          @if (contents.length === 0) {
+            <p class="form-hint">Aún no has añadido contenidos.</p>
+          }
+          <ol class="contents-list" formArrayName="contents">
+            @for (control of contents.controls; track control; let i = $index, first = $first, last = $last) {
+              <li class="content-item">
+                <label class="sr-only" [for]="'product-content-' + i"
+                  >Contenido {{ i + 1 }}</label
+                >
+                <input
+                  class="form-input"
+                  type="text"
+                  maxlength="200"
+                  [id]="'product-content-' + i"
+                  [formControlName]="i"
+                  [attr.aria-invalid]="!!contentError(i)"
+                />
+                <div class="content-actions">
+                  <button
+                    class="icon-button"
+                    type="button"
+                    [disabled]="first"
+                    [attr.aria-label]="'Subir contenido ' + (i + 1)"
+                    (click)="moveContent(i, -1)"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    class="icon-button"
+                    type="button"
+                    [disabled]="last"
+                    [attr.aria-label]="'Bajar contenido ' + (i + 1)"
+                    (click)="moveContent(i, 1)"
+                  >
+                    ↓
+                  </button>
+                  <button
+                    class="icon-button icon-button--danger"
+                    type="button"
+                    [attr.aria-label]="'Quitar contenido ' + (i + 1)"
+                    (click)="removeContent(i)"
+                  >
+                    <app-icon name="close" />
+                  </button>
+                </div>
+                @if (contentError(i); as message) {
+                  <p class="form-error">{{ message }}</p>
+                }
+              </li>
+            }
+          </ol>
+          @if (contents.length < maxContents) {
+            <button class="button button--ghost button--small add-content" type="button" (click)="addContent()">
+              + Añadir contenido
+            </button>
+          }
+        </section>
+
+        <section class="panel form-stack" aria-labelledby="image-title">
+          <h2 id="image-title">Imagen</h2>
+          <div class="image-picker">
+            <div class="image-frame">
+              @if (preview().image; as src) {
+                <img [src]="src" alt="" />
+              } @else {
+                <span class="image-empty"><app-icon name="box" />Sin imagen</span>
+              }
+            </div>
+            <div class="image-controls">
+              <label class="button button--ghost button--small file-button">
+                {{ preview().image ? "Cambiar imagen" : "Elegir imagen" }}
+                <input
+                  class="sr-only"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  aria-describedby="product-image-hint"
+                  (change)="pickImage($event)"
+                />
+              </label>
+              @if (pendingFile(); as file) {
+                <p class="form-hint pending-file">
+                  «{{ file.name }}» se subirá al guardar.
+                  <button class="text-link discard" type="button" (click)="discardImage()">
+                    Descartar
+                  </button>
+                </p>
+              }
+              <p class="form-hint" id="product-image-hint">
+                JPG, PNG o WebP de hasta 5 MB. Mejor en horizontal y con buena
+                luz.
+              </p>
+              <div aria-live="polite">
+                @if (imageError(); as message) {
+                  <p class="form-error">{{ message }}</p>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="product-imageAlt"
+              >Descripción de la imagen
+              <span class="form-optional">(para lectores de pantalla)</span></label
+            >
+            <input
+              class="form-input"
+              id="product-imageAlt"
+              type="text"
+              maxlength="300"
+              placeholder="Ej.: Caja del kit con fichas de colores sobre una mesa"
+              formControlName="imageAlt"
+              [attr.aria-invalid]="!!errorFor('imageAlt')"
+            />
+            @if (errorFor("imageAlt"); as message) {
+              <p class="form-error">{{ message }}</p>
+            }
+          </div>
+        </section>
+      </div>
+
+      <aside class="editor-side">
+        <section class="panel publish-panel" aria-labelledby="publish-title">
+          <h2 id="publish-title">Publicación</h2>
+          <label class="switch">
+            <input type="checkbox" role="switch" formControlName="published" />
+            <span class="switch-track" aria-hidden="true"></span>
+            <span>
+              <strong>{{ preview().published ? "Publicado" : "Borrador" }}</strong>
+              <small>{{
+                preview().published
+                  ? "Visible en la tienda."
+                  : "Solo lo ves tú en el panel."
+              }}</small>
+            </span>
+          </label>
+          <button
+            class="button button--primary form-submit"
+            type="submit"
+            [attr.aria-disabled]="saveState() !== 'idle'"
+          >
+            @switch (saveState()) {
+              @case ("saving") {
+                Guardando…
+              }
+              @case ("uploading") {
+                Subiendo imagen…
+              }
+              @default {
+                {{ productId ? "Guardar cambios" : "Crear producto" }}
+              }
+            }
+          </button>
+          @if (productId) {
+            <button class="button button--ghost button--small delete-button" type="button" (click)="askDelete()">
+              Eliminar producto
+            </button>
+          }
+        </section>
+
+        <section class="preview" aria-labelledby="preview-title">
+          <h2 id="preview-title">Vista previa en la tienda</h2>
+          <article class="preview-card" aria-hidden="true">
+            <div class="preview-image">
+              @if (preview().image; as src) {
+                <img [src]="src" alt="" />
+              }
+            </div>
+            <p class="preview-name">{{ preview().name }}</p>
+            @if (preview().activities; as count) {
+              <p class="preview-meta">{{ count }} actividades</p>
+            }
+            <p class="preview-summary">{{ preview().summary }}</p>
+            <p class="preview-price">{{ preview().price }}</p>
+          </article>
+        </section>
+      </aside>
+    </form>
+  }
+</div>
+
+<dialog #confirmDialog class="confirm-dialog" aria-labelledby="delete-title">
+  <h2 id="delete-title">¿Eliminar este producto?</h2>
+  <p>
+    Desaparecerá de la tienda y del panel, junto con su imagen. Si solo quieres
+    ocultarlo, pásalo a borrador.
+  </p>
+  <div class="dialog-actions">
+    <button class="button button--ghost button--small" type="button" (click)="cancelDelete()">
+      Cancelar
+    </button>
+    <button
+      class="button button--danger button--small"
+      type="button"
+      [attr.aria-disabled]="deleting()"
+      (click)="confirmDelete()"
+    >
+      {{ deleting() ? "Eliminando…" : "Eliminar" }}
+    </button>
+  </div>
+</dialog>

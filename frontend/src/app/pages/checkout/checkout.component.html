@@ -1,0 +1,253 @@
+<div class="checkout page">
+  <div class="container">
+    <header class="checkout-header">
+      <a class="back-link" routerLink="/carrito"
+        ><app-icon name="arrow" class="back-icon" />Volver al carrito</a
+      >
+      <h1>Finalizar compra</h1>
+    </header>
+
+    <div class="checkout-layout">
+      <form
+        class="checkout-form form-stack"
+        novalidate
+        [formGroup]="form"
+        (ngSubmit)="submit()"
+      >
+        <div class="live-region" aria-live="assertive">
+          @if (serverError(); as message) {
+            <p class="form-alert form-alert--error">{{ message }}</p>
+          }
+        </div>
+
+        <fieldset class="form-group">
+          <legend>Datos de contacto</legend>
+          <div class="form-field">
+            <label class="form-label" for="checkout-fullName">Nombre completo</label>
+            <input
+              class="form-input"
+              id="checkout-fullName"
+              type="text"
+              formControlName="fullName"
+              autocomplete="name"
+              maxlength="120"
+              aria-required="true"
+              [attr.aria-invalid]="!!errorFor('fullName')"
+              [attr.aria-describedby]="describedBy('fullName')"
+            />
+            @if (errorFor("fullName"); as message) {
+              <p class="form-error" id="checkout-fullName-error">{{ message }}</p>
+            }
+          </div>
+          <div class="field-row">
+            <div class="form-field">
+              <label class="form-label" for="checkout-email">Correo electrónico</label>
+              <input
+                class="form-input"
+                id="checkout-email"
+                type="email"
+                formControlName="email"
+                autocomplete="email"
+                inputmode="email"
+                autocapitalize="off"
+                spellcheck="false"
+                maxlength="254"
+                aria-required="true"
+                [attr.aria-invalid]="!!errorFor('email')"
+                [attr.aria-describedby]="describedBy('email', 'checkout-email-hint')"
+              />
+              <p class="form-hint" id="checkout-email-hint">
+                Aquí te enviamos la confirmación del pedido.
+              </p>
+              @if (errorFor("email"); as message) {
+                <p class="form-error" id="checkout-email-error">{{ message }}</p>
+              }
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="checkout-phone">Celular</label>
+              <input
+                class="form-input"
+                id="checkout-phone"
+                type="tel"
+                formControlName="phone"
+                autocomplete="tel"
+                inputmode="tel"
+                placeholder="300 123 4567"
+                aria-required="true"
+                [attr.aria-invalid]="!!errorFor('phone')"
+                [attr.aria-describedby]="describedBy('phone')"
+              />
+              @if (errorFor("phone"); as message) {
+                <p class="form-error" id="checkout-phone-error">{{ message }}</p>
+              }
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="checkout-document">Cédula</label>
+            <input
+              class="form-input"
+              id="checkout-document"
+              type="text"
+              formControlName="document"
+              inputmode="numeric"
+              autocomplete="off"
+              aria-required="true"
+              [attr.aria-invalid]="!!errorFor('document')"
+              [attr.aria-describedby]="describedBy('document', 'checkout-document-hint')"
+            />
+            <p class="form-hint" id="checkout-document-hint">
+              La pide Wompi para algunos medios de pago, como PSE.
+            </p>
+            @if (errorFor("document"); as message) {
+              <p class="form-error" id="checkout-document-error">{{ message }}</p>
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="form-group">
+          <legend>Envío</legend>
+          <div class="field-row">
+            <div class="form-field">
+              <label class="form-label" for="checkout-department">Departamento</label>
+              <select
+                class="form-input"
+                id="checkout-department"
+                formControlName="department"
+                autocomplete="address-level1"
+                aria-required="true"
+                [attr.aria-invalid]="!!errorFor('department')"
+                [attr.aria-describedby]="describedBy('department')"
+              >
+                <option value="" disabled>Elige un departamento</option>
+                @for (department of departments; track department) {
+                  <option [value]="department">{{ department }}</option>
+                }
+              </select>
+              @if (errorFor("department"); as message) {
+                <p class="form-error" id="checkout-department-error">{{ message }}</p>
+              }
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="checkout-city">Ciudad o municipio</label>
+              <input
+                class="form-input"
+                id="checkout-city"
+                type="text"
+                formControlName="city"
+                autocomplete="address-level2"
+                maxlength="80"
+                aria-required="true"
+                [attr.aria-invalid]="!!errorFor('city')"
+                [attr.aria-describedby]="describedBy('city')"
+              />
+              @if (errorFor("city"); as message) {
+                <p class="form-error" id="checkout-city-error">{{ message }}</p>
+              }
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="checkout-address">Dirección</label>
+            <input
+              class="form-input"
+              id="checkout-address"
+              type="text"
+              formControlName="address"
+              autocomplete="street-address"
+              maxlength="200"
+              placeholder="Calle 10 # 43-20, apto 501"
+              aria-required="true"
+              [attr.aria-invalid]="!!errorFor('address')"
+              [attr.aria-describedby]="describedBy('address')"
+            />
+            @if (errorFor("address"); as message) {
+              <p class="form-error" id="checkout-address-error">{{ message }}</p>
+            }
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="checkout-notes"
+              >Indicaciones para la entrega
+              <span class="form-optional">(opcional)</span></label
+            >
+            <textarea
+              class="form-input"
+              id="checkout-notes"
+              rows="3"
+              formControlName="notes"
+              maxlength="300"
+              placeholder="Barrio, punto de referencia, horario…"
+              [attr.aria-invalid]="!!errorFor('notes')"
+              [attr.aria-describedby]="describedBy('notes')"
+            ></textarea>
+            @if (errorFor("notes"); as message) {
+              <p class="form-error" id="checkout-notes-error">{{ message }}</p>
+            }
+          </div>
+        </fieldset>
+      </form>
+
+      <aside class="checkout-summary" aria-labelledby="checkout-summary-title">
+        <h2 id="checkout-summary-title">Tu pedido</h2>
+        @if (quote(); as quote) {
+          <ul class="summary-lines">
+            @for (line of quote.lines; track line.productId) {
+              <li>
+                <span>{{ line.quantity }} × {{ line.product?.name ?? "Producto no disponible" }}</span>
+                <span>{{ formatCop(line.lineTotalCop) }}</span>
+              </li>
+            }
+          </ul>
+          <dl class="summary-totals">
+            <div>
+              <dt>Subtotal</dt>
+              <dd>{{ formatCop(quote.subtotalCop) }}</dd>
+            </div>
+            <div>
+              <dt>Envío</dt>
+              <dd>{{ shippingCop() ? formatCop(shippingCop()) : "Gratis" }}</dd>
+            </div>
+            <div class="summary-total">
+              <dt>Total</dt>
+              <dd>{{ formatCop(totalCop()) }}</dd>
+            </div>
+          </dl>
+          @if (!quote.purchasable) {
+            <p class="summary-warning" role="status">
+              Hay productos que ya no están disponibles.
+              <a routerLink="/carrito">Revisa tu carrito</a>.
+            </p>
+          }
+        } @else if (quoteError()) {
+          <div role="alert" class="summary-warning">
+            <p>No pudimos calcular tu pedido.</p>
+            <button class="button button--outline" type="button" (click)="loadQuote()">
+              Intentar de nuevo
+            </button>
+          </div>
+        } @else {
+          <p class="summary-loading" role="status">Calculando tu pedido…</p>
+        }
+
+        @if (paymentsEnabled() === false) {
+          <p class="summary-warning" role="status">
+            El pago en línea aún no está disponible. Escríbenos y te ayudamos
+            con tu pedido.
+          </p>
+        }
+        <button
+          class="button button--primary pay-button"
+          type="button"
+          [attr.aria-disabled]="!canPay() || null"
+          [disabled]="paymentsEnabled() === false || (quote() !== null && !quote()!.purchasable)"
+          (click)="submit()"
+        >
+          {{ pending() ? "Llevándote a Wompi…" : "Pagar con Wompi" }}
+        </button>
+        <p class="trust-note">
+          <app-icon name="heart" class="trust-icon" />Pago seguro con Wompi
+          (Bancolombia): tarjetas, PSE, Nequi, Daviplata y más. No guardamos
+          los datos de tu tarjeta.
+        </p>
+      </aside>
+    </div>
+  </div>
+</div>

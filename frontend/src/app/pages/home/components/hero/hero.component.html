@@ -1,0 +1,57 @@
+<section class="hero" aria-labelledby="home-title">
+  <div class="hero-inner container">
+    <div class="hero-copy">
+      <h1 id="home-title">
+        Transformamos<br class="desktop-break" />
+        el juego<br class="mobile-break" />
+        en desarrollo,<br />
+        <span
+          >desde la comodidad<br />
+          de tu hogar.</span
+        ><span class="little-heart" aria-hidden="true">♥</span>
+      </h1>
+      <p>
+        Materiales terapéuticos y acompañamiento profesional<br
+          class="wide-break"
+        />
+        para que cada actividad en casa tenga sentido,<br class="wide-break" />
+        sea gratificante y reconfortante.
+      </p>
+      <div class="hero-actions">
+        <a
+          class="button button--primary"
+          routerLink="/tienda"
+          ><app-icon name="cart" />Conoce nuestros kits</a
+        >
+        <button
+          class="button button--outline"
+          type="button"
+          (click)="info.openAdvisory()"
+        >
+          <app-icon name="whatsapp" />Agenda una asesoría
+        </button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="photo-wrap">
+        <img
+          ngSrc="images/family-play.webp"
+          width="1448"
+          height="1086"
+          priority
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 52vw, 58vw"
+          alt="Una mamá y su hijo disfrutan construyendo juntos con bloques de madera de colores."
+        />
+      </div>
+      <app-decorative-leaves class="leaves" />
+      <div class="care-note">
+        <app-icon name="heart" />
+        <p>
+          Acompañamos<br />
+          cada paso,<br />
+          celebramos cada logro.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

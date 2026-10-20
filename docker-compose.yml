@@ -1,0 +1,64 @@
+# Entorno local de desarrollo: base de datos, bandeja de correo, API y web.
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: psicotoando
+      POSTGRES_PASSWORD: psicotoando
+      POSTGRES_DB: psicotoando
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U psicotoando -d psicotoando"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  # API NestJS en modo watch. Usa backend/.env, pero apunta a los servicios por su nombre en la red de Docker.
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file: ./backend/.env
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+      # node_modules propio del contenedor (argon2 se compila para Linux).
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+
+  # Angular dev server; el proxy de /api apunta al servicio backend.
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.angular
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:

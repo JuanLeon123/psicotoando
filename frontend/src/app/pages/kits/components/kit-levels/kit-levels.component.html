@@ -1,0 +1,25 @@
+<section class="kit-levels" aria-labelledby="levels-title">
+  <header class="levels-header">
+    <h2 id="levels-title" class="section-title">Niveles de la Caja W°alli</h2>
+    <p class="lead">
+      Desarrollamos tres niveles de la Caja W°alli que se ajustan a las
+      necesidades específicas de cada niño y niña, según su grado de
+      funcionalidad.
+    </p>
+    <p class="lead">
+      Esto permite adaptar el tipo de tareas, la complejidad y los tiempos de
+      ejecución. Te guiaremos en la elección del nivel más conveniente y te
+      acompañaremos en el proceso de seguimiento para alcanzar las metas
+      propuestas.
+    </p>
+  </header>
+  <ol class="levels-list">
+    @for (level of levels; track level.name) {
+      <li [class]="'level level--' + level.tone">
+        <span class="level-icon"><app-icon [name]="level.icon" /></span>
+        <h3><span>Nivel</span> {{ level.name }}</h3>
+        <p>{{ level.description }}</p>
+      </li>
+    }
+  </ol>
+</section>

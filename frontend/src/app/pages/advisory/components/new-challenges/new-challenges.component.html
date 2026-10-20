@@ -1,0 +1,36 @@
+<section class="new-challenges" aria-labelledby="challenges-title">
+  <div class="stage-copy">
+    <h2 id="challenges-title">
+      <span class="stage-number" aria-hidden="true">3</span>Extensiones y
+      nuevos retos
+    </h2>
+    <p>
+      Una vez se completen los objetivos de una caja, podrán revisar y
+      <strong>adquirir extensiones</strong> que permiten, con los elementos
+      comprados, trabajar un nuevo nivel de desarrollo o la adquisición de
+      materiales por separado para lograr los objetivos actuales.
+    </p>
+    <p class="growth-note">
+      Buscamos el <strong>desarrollo continuo</strong> y entendemos que siempre
+      se requieren nuevos retos para los niños y niñas, de la mano de las
+      familias.
+    </p>
+  </div>
+  <ul
+    class="activity-gallery"
+    aria-label="Ejemplos de actividades para seguir aprendiendo"
+  >
+    @for (activity of activities; track activity.image) {
+      <li>
+        <img
+          [src]="activity.image"
+          [alt]="activity.alt"
+          width="640"
+          height="640"
+          loading="lazy"
+          decoding="async"
+        />
+      </li>
+    }
+  </ul>
+</section>

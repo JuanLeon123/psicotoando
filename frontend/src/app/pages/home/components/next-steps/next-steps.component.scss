@@ -1,0 +1,93 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.next-steps {
+  padding-block: var(--section-gap) var(--page-bottom);
+}
+h2 {
+  margin-top: var(--space-1);
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.step-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-cream);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.step:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px var(--color-shadow-soft);
+}
+.step-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: var(--space-1);
+  border-radius: 50%;
+  color: var(--color-surface);
+  background: var(--color-primary);
+}
+.step-icon app-icon {
+  width: 28px;
+  height: 28px;
+}
+.step-title {
+  color: var(--color-heading);
+  font-size: var(--fs-h3);
+  font-weight: 800;
+}
+.step-description {
+  flex: 1;
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.step-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-2);
+  color: var(--color-primary);
+  font-size: 15px;
+  font-weight: 800;
+}
+.step-more app-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s;
+}
+.step:hover .step-more app-icon {
+  transform: translateX(4px);
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  .step-list {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .next-steps {
+    padding-top: var(--space-6);
+  }
+  .step {
+    padding: var(--space-3);
+  }
+}

@@ -1,0 +1,159 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Pedidos</h1>
+      <p class="page-intro">
+        Los pedidos pagados con Wompi aparecen como «Pagado». Marca su envío a
+        medida que los preparas y despachas.
+      </p>
+    </div>
+  </header>
+
+  <div class="toolbar" role="search">
+    <label class="search">
+      <span class="sr-only">Buscar pedidos</span>
+      <app-icon name="search" />
+      <input
+        class="form-input"
+        type="search"
+        placeholder="Referencia, nombre o correo"
+        [value]="query()"
+        (input)="search($any($event.target).value)"
+      />
+    </label>
+    <label class="filter">
+      <span class="filter-label">Pago</span>
+      <select class="form-input" [value]="status()" (change)="setStatus($any($event.target).value)">
+        <option value="">Todos</option>
+        @for (option of paymentOptions; track option[0]) {
+          <option [value]="option[0]">{{ option[1] }}</option>
+        }
+      </select>
+    </label>
+    <label class="filter">
+      <span class="filter-label">Envío</span>
+      <select
+        class="form-input"
+        [value]="fulfillment()"
+        (change)="setFulfillment($any($event.target).value)"
+      >
+        <option value="">Todos</option>
+        @for (option of fulfillmentOptions; track option[0]) {
+          <option [value]="option[0]">{{ option[1] }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  @switch (state()) {
+    @case ("loading") {
+      <p class="state" aria-busy="true">Cargando pedidos…</p>
+    }
+    @case ("error") {
+      <div class="state" role="alert">
+        <h2>No pudimos cargar los pedidos</h2>
+        <button class="button button--ghost button--small" type="button" (click)="load()">
+          Reintentar
+        </button>
+      </div>
+    }
+    @default {
+      @if (orders().length === 0) {
+        <section class="state" aria-labelledby="empty-title">
+          <span class="state-icon"><app-icon name="clipboard" /></span>
+          @if (filtering()) {
+            <h2 id="empty-title">Ningún pedido coincide</h2>
+            <p>Prueba con otra búsqueda o quita los filtros.</p>
+          } @else {
+            <h2 id="empty-title">Aún no hay pedidos</h2>
+            <p>
+              Cuando una familia pague en la tienda, su pedido aparecerá aquí y
+              te llegará un correo.
+            </p>
+          }
+        </section>
+      } @else {
+        <p class="count" aria-live="polite">
+          {{ total() }} {{ total() === 1 ? "pedido" : "pedidos" }}
+        </p>
+        <div class="table-wrap">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th scope="col">Pedido</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Pago</th>
+                <th scope="col">Envío</th>
+                <th scope="col" class="num">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (order of orders(); track order.id) {
+                <tr>
+                  <td data-label="Pedido">
+                    <div class="cell">
+                      <a class="order-link" [routerLink]="['/admin/pedidos', order.id]">{{
+                        order.reference
+                      }}</a>
+                      <span class="muted">{{ formatDateTime(order.createdAt) }}</span>
+                    </div>
+                  </td>
+                  <td data-label="Cliente">
+                    <div class="cell">
+                      <span class="strong">{{ order.customerName }}</span>
+                      <span class="muted">{{ order.customerEmail }}</span>
+                    </div>
+                  </td>
+                  <td data-label="Pago">
+                    <span class="badge" [class]="'badge badge--' + order.status">{{
+                      paymentLabels[order.status]
+                    }}</span>
+                  </td>
+                  <td data-label="Envío">
+                    @if (order.status === "approved") {
+                      <span class="badge" [class]="'badge badge--' + order.fulfillment">{{
+                        fulfillmentLabels[order.fulfillment]
+                      }}</span>
+                    } @else {
+                      <span class="muted">—</span>
+                    }
+                  </td>
+                  <td data-label="Total" class="num">
+                    <div class="cell">
+                      <span class="strong">{{ formatCop(order.totalCop) }}</span>
+                      <span class="muted"
+                        >{{ order.itemCount }}
+                        {{ order.itemCount === 1 ? "producto" : "productos" }}</span
+                      >
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        @if (pages() > 1) {
+          <nav class="pagination" aria-label="Páginas de pedidos">
+            <button
+              class="button button--ghost button--small"
+              type="button"
+              [disabled]="page() === 1"
+              (click)="goTo(page() - 1)"
+            >
+              Anterior
+            </button>
+            <span>Página {{ page() }} de {{ pages() }}</span>
+            <button
+              class="button button--ghost button--small"
+              type="button"
+              [disabled]="page() === pages()"
+              (click)="goTo(page() + 1)"
+            >
+              Siguiente
+            </button>
+          </nav>
+        }
+      }
+    }
+  }
+</div>

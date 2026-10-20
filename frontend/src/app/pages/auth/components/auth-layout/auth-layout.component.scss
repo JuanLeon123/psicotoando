@@ -1,0 +1,92 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.auth-page {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: var(--page-top) var(--space-6);
+}
+.auth-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  gap: 12px;
+  width: min(100% - 48px, 1080px);
+  margin-inline: auto;
+  padding: 12px;
+  border-radius: 36px;
+  background: var(--color-cream);
+}
+.auth-visual {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  border-radius: 28px;
+}
+.auth-visual img {
+  object-fit: cover;
+}
+.visual-note {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  color: var(--color-heading);
+  background: var(--color-surface);
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 800;
+}
+.visual-note app-icon {
+  color: var(--color-coral);
+}
+.auth-content {
+  display: grid;
+  align-content: center;
+  gap: 24px;
+  padding: 36px clamp(20px, 4vw, 52px);
+  border-radius: 28px;
+  background: var(--color-surface);
+}
+.auth-header {
+  display: grid;
+  gap: 8px;
+}
+h1 {
+  font-size: clamp(30px, 3vw, 40px);
+  line-height: 1.08;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+.auth-intro {
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.6;
+}
+@media (max-width: 900px) {
+  .auth-card {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 600px;
+  }
+  .auth-visual {
+    display: none;
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .auth-card {
+    width: min(100% - 32px, 600px);
+    padding: 8px;
+    border-radius: 28px;
+  }
+  .auth-content {
+    gap: 20px;
+    padding: 26px 18px;
+    border-radius: 22px;
+  }
+}

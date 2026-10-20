@@ -1,0 +1,11 @@
+:host {
+  display: block;
+}
+.advisory-content {
+  display: grid;
+  gap: var(--section-gap);
+}
+.support-layout {
+  display: grid;
+  gap: var(--space-4);
+}

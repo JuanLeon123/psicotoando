@@ -1,0 +1,106 @@
+<div class="blog page">
+  <div class="container">
+    <header class="blog-header">
+      <p class="eyebrow">Blog</p>
+      <h1>Ideas para crecer en familia</h1>
+      <p class="lead">
+        Artículos, videos y actividades para acompañar el desarrollo de tus hijos
+        desde casa, con sentido y sin prisa.
+      </p>
+    </header>
+
+    @if (categories().length > 1) {
+      <div class="filters" role="group" aria-label="Filtrar por categoría">
+        <button
+          type="button"
+          class="chip"
+          [attr.aria-pressed]="category() === null"
+          (click)="selectCategory(null)"
+        >
+          Todos
+        </button>
+        @for (item of categories(); track item) {
+          <button
+            type="button"
+            class="chip"
+            [attr.aria-pressed]="category() === item"
+            (click)="selectCategory(item)"
+          >
+            {{ item }}
+          </button>
+        }
+      </div>
+    }
+
+    @switch (state()) {
+      @case ("loading") {
+        <ul class="post-grid" aria-hidden="true">
+          @for (placeholder of [1, 2, 3]; track placeholder) {
+            <li class="post-skeleton"></li>
+          }
+        </ul>
+        <p class="sr-only" role="status">Cargando artículos…</p>
+      }
+      @case ("error") {
+        <div class="blog-message" role="alert">
+          <p>No pudimos cargar los artículos. Revisa tu conexión.</p>
+          <button class="button button--outline" type="button" (click)="load()">
+            Intentar de nuevo
+          </button>
+        </div>
+      }
+      @default {
+        @if (posts().length) {
+          <ul class="post-grid">
+            @for (post of posts(); track post.id) {
+              <li>
+                <article class="post-card">
+                  <a class="post-image" [routerLink]="['/blog', post.slug]" tabindex="-1" aria-hidden="true">
+                    @if (post.coverUrl; as src) {
+                      <img [src]="src" [alt]="post.coverAlt" width="640" height="400" loading="lazy" decoding="async" />
+                    }
+                  </a>
+                  <div class="post-body">
+                    @if (post.category) {
+                      <p class="post-category">{{ post.category }}</p>
+                    }
+                    <h2><a [routerLink]="['/blog', post.slug]">{{ post.title }}</a></h2>
+                    @if (post.excerpt) {
+                      <p class="post-excerpt">{{ post.excerpt }}</p>
+                    }
+                    <p class="post-meta">
+                      <time [attr.datetime]="post.publishedAt">{{ formatDate(post.publishedAt) }}</time>
+                      · {{ post.readingMinutes }} min de lectura
+                    </p>
+                  </div>
+                </article>
+              </li>
+            }
+          </ul>
+          @if (posts().length < total()) {
+            <div class="more">
+              <button
+                class="button button--outline"
+                type="button"
+                [disabled]="loadingMore()"
+                (click)="loadMore()"
+              >
+                {{ loadingMore() ? "Cargando…" : "Cargar más artículos" }}
+              </button>
+            </div>
+          }
+        } @else {
+          <div class="blog-message">
+            <p>
+              @if (category()) {
+                Aún no hay artículos en «{{ category() }}».
+              } @else {
+                Estamos preparando los primeros artículos. Muy pronto los verás aquí.
+              }
+            </p>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>

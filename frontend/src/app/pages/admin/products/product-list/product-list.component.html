@@ -1,0 +1,176 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Productos</h1>
+      <p class="page-intro">
+        Los productos publicados son los que ven tus clientes en la tienda. Los
+        borradores solo se ven aquí.
+      </p>
+    </div>
+    <a class="button button--primary button--small" routerLink="/admin/productos/nuevo"
+      ><app-icon name="box" />Nuevo producto</a
+    >
+  </header>
+
+  <div class="live-region" aria-live="polite">
+    @if (message(); as text) {
+      <p class="form-alert form-alert--success">{{ text }}</p>
+    }
+    @if (error(); as text) {
+      <p class="form-alert form-alert--error">{{ text }}</p>
+    }
+  </div>
+
+  @switch (state()) {
+    @case ("loading") {
+      <p class="state" aria-busy="true">Cargando productos…</p>
+    }
+    @case ("error") {
+      <div class="state">
+        <h2>No pudimos cargar los productos</h2>
+        <button class="button button--ghost button--small" type="button" (click)="load()">
+          Reintentar
+        </button>
+      </div>
+    }
+    @default {
+      @if (products().length === 0) {
+        <section class="state" aria-labelledby="empty-title">
+          <span class="state-icon"><app-icon name="box" /></span>
+          <h2 id="empty-title">Aún no tienes productos</h2>
+          <p>Crea el primero y publícalo para que aparezca en la tienda.</p>
+          <a class="button button--primary button--small" routerLink="/admin/productos/nuevo"
+            >Crear producto</a
+          >
+        </section>
+      } @else {
+        <div class="toolbar">
+          <label class="search">
+            <span class="sr-only">Buscar productos</span>
+            <app-icon name="search" />
+            <input
+              class="form-input"
+              type="search"
+              placeholder="Buscar por nombre o descripción"
+              [value]="query()"
+              (input)="query.set($any($event.target).value)"
+            />
+          </label>
+          <p class="count" aria-live="polite">
+            {{ filtered().length }}
+            {{ filtered().length === 1 ? "producto" : "productos" }}
+          </p>
+        </div>
+
+        @if (filtered().length === 0) {
+          <p class="state">Ningún producto coincide con «{{ query() }}».</p>
+        } @else {
+          <table class="product-table">
+            <thead>
+              <tr>
+                <th scope="col">Producto</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Inventario</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Orden</th>
+                <th scope="col"><span class="sr-only">Acciones</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (product of filtered(); track product.id) {
+                <tr class="product-row">
+                  <td class="cell-product">
+                    <div class="product-cell">
+                    @if (product.imageUrl) {
+                      <img class="thumb" [src]="product.imageUrl" alt="" loading="lazy" />
+                    } @else {
+                      <span class="thumb thumb--empty" aria-hidden="true"
+                        ><app-icon name="box"
+                      /></span>
+                    }
+                    <span>
+                      <a class="product-name" [routerLink]="['/admin/productos', product.id]">{{
+                        product.name
+                      }}</a>
+                      <small>{{ product.summary }}</small>
+                    </span>
+                    </div>
+                  </td>
+                  <td data-label="Precio">
+                    <span [class.muted]="product.priceCop === null">{{
+                      product.priceCop === null ? "Sin precio" : formatCop(product.priceCop)
+                    }}</span>
+                  </td>
+                  <td data-label="Inventario">
+                    <span [class.muted]="product.stock === null">{{ stockLabel(product) }}</span>
+                  </td>
+                  <td data-label="Estado">
+                    <span
+                      class="badge"
+                      [class.badge--published]="product.published"
+                      [class.badge--draft]="!product.published"
+                      >{{ product.published ? "Publicado" : "Borrador" }}</span
+                    >
+                  </td>
+                  <td data-label="Orden">{{ product.sortOrder }}</td>
+                  <td class="cell-actions">
+                    <button
+                      class="button button--ghost button--small publish-toggle"
+                      type="button"
+                      [attr.aria-disabled]="busyId() === product.id"
+                      (click)="busyId() === product.id || togglePublished(product)"
+                    >
+                      {{ product.published ? "Pasar a borrador" : "Publicar" }}
+                    </button>
+                    <a
+                      class="icon-action"
+                      [routerLink]="['/admin/productos', product.id]"
+                      [attr.aria-label]="'Editar ' + product.name"
+                      ><app-icon name="pencil"
+                    /></a>
+                    <button
+                      class="icon-action icon-action--danger"
+                      type="button"
+                      [attr.aria-label]="'Eliminar ' + product.name"
+                      (click)="askDelete(product)"
+                    >
+                      <app-icon name="close" />
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    }
+  }
+</div>
+
+<dialog
+  #confirmDialog
+  class="confirm-dialog"
+  aria-labelledby="delete-title"
+  (close)="toDelete.set(null)"
+>
+  @if (toDelete(); as product) {
+    <h2 id="delete-title">¿Eliminar «{{ product.name }}»?</h2>
+    <p>
+      Desaparecerá de la tienda y del panel, junto con su imagen. Esta acción
+      no se puede deshacer. Si solo quieres ocultarlo, pásalo a borrador.
+    </p>
+    <div class="dialog-actions">
+      <button class="button button--ghost button--small" type="button" (click)="cancelDelete()">
+        Cancelar
+      </button>
+      <button
+        class="button button--danger button--small"
+        type="button"
+        [attr.aria-disabled]="busyId() === product.id"
+        (click)="busyId() === product.id || confirmDelete()"
+      >
+        {{ busyId() === product.id ? "Eliminando…" : "Eliminar" }}
+      </button>
+    </div>
+  }
+</dialog>

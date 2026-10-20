@@ -1,0 +1,12 @@
+<section class="values" aria-labelledby="values-title">
+  <h2 id="values-title" class="section-title">Valores de la marca</h2>
+  <ul class="values-list">
+    @for (value of values; track value.title) {
+      <li [class]="'value value--' + value.tone">
+        <span class="value-icon"><app-icon [name]="value.icon" /></span>
+        <h3>{{ value.title }}</h3>
+        <p>{{ value.description }}</p>
+      </li>
+    }
+  </ul>
+</section>

@@ -1,0 +1,126 @@
+<section class="account-card" aria-labelledby="profile-title">
+  <header class="card-header">
+    <h2 id="profile-title">Tus datos</h2>
+    <p class="card-intro">
+      Nos ayudan a personalizar el acompañamiento. Solo tú y nuestro equipo
+      pueden verlos.
+    </p>
+  </header>
+  <form class="form-stack" novalidate (ngSubmit)="submit()" [formGroup]="form">
+    <div class="live-region" aria-live="polite">
+      @if (serverError()) {
+        <p class="form-alert form-alert--error">{{ serverError() }}</p>
+      }
+      @if (saved()) {
+        <p class="form-alert form-alert--success">
+          Tus datos se guardaron correctamente.
+        </p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="profile-fullName">Nombre completo</label>
+      <input
+        class="form-input"
+        id="profile-fullName"
+        type="text"
+        formControlName="fullName"
+        autocomplete="name"
+        maxlength="120"
+        aria-required="true"
+        [attr.aria-invalid]="!!errorFor('fullName')"
+        [attr.aria-describedby]="
+          errorFor('fullName') ? 'profile-fullName-error' : null
+        "
+      />
+      @if (errorFor("fullName"); as message) {
+        <p class="form-error" id="profile-fullName-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="profile-email">Correo electrónico</label>
+      <input
+        class="form-input"
+        id="profile-email"
+        type="email"
+        [value]="user().email"
+        readonly
+        aria-describedby="profile-email-hint"
+      />
+      <p class="form-hint" id="profile-email-hint">
+        El correo identifica tu cuenta y no se puede modificar.
+      </p>
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="profile-phone"
+        >Teléfono <span class="form-optional">(opcional)</span></label
+      >
+      <input
+        class="form-input"
+        id="profile-phone"
+        type="tel"
+        formControlName="phone"
+        autocomplete="tel"
+        inputmode="tel"
+        maxlength="30"
+        [attr.aria-invalid]="!!errorFor('phone')"
+        [attr.aria-describedby]="errorFor('phone') ? 'profile-phone-error' : null"
+      />
+      @if (errorFor("phone"); as message) {
+        <p class="form-error" id="profile-phone-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="profile-childName"
+        >Nombre de tu hijo o hija
+        <span class="form-optional">(opcional)</span></label
+      >
+      <input
+        class="form-input"
+        id="profile-childName"
+        type="text"
+        formControlName="childName"
+        autocomplete="off"
+        maxlength="120"
+        [attr.aria-invalid]="!!errorFor('childName')"
+        [attr.aria-describedby]="
+          errorFor('childName') ? 'profile-childName-error' : null
+        "
+      />
+      @if (errorFor("childName"); as message) {
+        <p class="form-error" id="profile-childName-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="profile-childBirthDate"
+        >Fecha de nacimiento de tu hijo o hija
+        <span class="form-optional">(opcional)</span></label
+      >
+      <input
+        class="form-input"
+        id="profile-childBirthDate"
+        type="date"
+        formControlName="childBirthDate"
+        autocomplete="off"
+        [max]="maxDate"
+        [attr.aria-invalid]="!!errorFor('childBirthDate')"
+        [attr.aria-describedby]="
+          errorFor('childBirthDate') ? 'profile-childBirthDate-error' : null
+        "
+      />
+      @if (errorFor("childBirthDate"); as message) {
+        <p class="form-error" id="profile-childBirthDate-error">
+          {{ message }}
+        </p>
+      }
+    </div>
+    <div class="form-actions">
+      <button
+        class="button button--primary"
+        type="submit"
+        [attr.aria-disabled]="pending() || null"
+      >
+        {{ pending() ? "Guardando…" : "Guardar cambios" }}
+      </button>
+    </div>
+  </form>
+</section>

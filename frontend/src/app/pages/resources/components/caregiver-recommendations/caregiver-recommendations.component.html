@@ -1,0 +1,30 @@
+<section class="recommendations" aria-labelledby="recommendations-title">
+  <h2 id="recommendations-title" class="section-title">
+    5 recomendaciones para cuidar a quien cuida
+  </h2>
+  <ol class="recommendations-list">
+    @for (
+      recommendation of recommendations;
+      track recommendation.id;
+      let index = $index
+    ) {
+      <li class="recommendation">
+        <span class="recommendation-number" aria-hidden="true">{{
+          index + 1
+        }}</span>
+        <div class="recommendation-copy">
+          <h3>{{ recommendation.title }}</h3>
+          <p>{{ recommendation.description }}</p>
+        </div>
+        <app-resource-illustration [kind]="recommendation.illustration" />
+      </li>
+    }
+  </ol>
+  <div class="care-reminder">
+    <app-resource-illustration kind="care" />
+    <p>
+      Cuidarte no significa alejarte de tu hijo o hija: significa darte la
+      oportunidad de acompañarle con más calma, confianza y bienestar.
+    </p>
+  </div>
+</section>

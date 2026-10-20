@@ -1,0 +1,95 @@
+<section class="account-card" aria-labelledby="security-title">
+  <header class="card-header">
+    <h2 id="security-title">Seguridad</h2>
+    <p class="card-intro">
+      @if (hasPassword()) {
+        Cambia tu contraseña cuando lo necesites. Cerraremos las sesiones
+        abiertas en otros dispositivos.
+      } @else {
+        Entras con Google. Si quieres, crea también una contraseña para iniciar
+        sesión con tu correo.
+      }
+    </p>
+  </header>
+  <form class="form-stack" novalidate (ngSubmit)="submit()" [formGroup]="form">
+    <div class="live-region" aria-live="polite">
+      @if (serverError()) {
+        <p class="form-alert form-alert--error">{{ serverError() }}</p>
+      }
+      @if (saved()) {
+        <p class="form-alert form-alert--success">
+          Tu contraseña se actualizó. Cerramos las demás sesiones abiertas.
+        </p>
+      }
+    </div>
+    @if (hasPassword()) {
+      <div class="form-field">
+        <label class="form-label" for="security-currentPassword"
+          >Contraseña actual</label
+        >
+        <app-password-field
+          inputId="security-currentPassword"
+          [control]="form.controls.currentPassword"
+          autocomplete="current-password"
+          [invalid]="!!errorFor('currentPassword')"
+          [describedBy]="describedBy('currentPassword')"
+        />
+        @if (errorFor("currentPassword"); as message) {
+          <p class="form-error" id="security-currentPassword-error">
+            {{ message }}
+          </p>
+        }
+      </div>
+    }
+    <div class="form-field">
+      <label class="form-label" for="security-newPassword"
+        >Nueva contraseña</label
+      >
+      <app-password-field
+        inputId="security-newPassword"
+        [control]="form.controls.newPassword"
+        autocomplete="new-password"
+        [invalid]="!!errorFor('newPassword')"
+        [describedBy]="describedBy('newPassword', 'security-newPassword-hint')"
+      />
+      <p class="form-hint" id="security-newPassword-hint">
+        Mínimo 8 caracteres, con al menos una letra y un número.
+      </p>
+      @if (errorFor("newPassword"); as message) {
+        <p class="form-error" id="security-newPassword-error">{{ message }}</p>
+      }
+    </div>
+    <div class="form-field">
+      <label class="form-label" for="security-confirmPassword"
+        >Confirma la nueva contraseña</label
+      >
+      <app-password-field
+        inputId="security-confirmPassword"
+        [control]="form.controls.confirmPassword"
+        autocomplete="new-password"
+        [invalid]="!!errorFor('confirmPassword')"
+        [describedBy]="describedBy('confirmPassword')"
+      />
+      @if (errorFor("confirmPassword"); as message) {
+        <p class="form-error" id="security-confirmPassword-error">
+          {{ message }}
+        </p>
+      }
+    </div>
+    <div class="form-actions">
+      <button
+        class="button button--primary"
+        type="submit"
+        [attr.aria-disabled]="pending() || null"
+      >
+        {{
+          pending()
+            ? "Guardando…"
+            : hasPassword()
+              ? "Cambiar contraseña"
+              : "Crear contraseña"
+        }}
+      </button>
+    </div>
+  </form>
+</section>

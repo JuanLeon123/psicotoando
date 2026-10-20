@@ -1,0 +1,9 @@
+/node_modules
+/dist
+/coverage
+*.log
+# Secretos solo de pruebas, sin valor fuera de la base de datos de test.
+!.env.test
+
+# Imágenes subidas desde el panel de administración.
+/uploads

@@ -1,0 +1,175 @@
+<header class="site-header" (keydown.escape)="closeMenu(true)">
+  <div class="header-inner container">
+    <a
+      class="brand"
+      routerLink="/"
+      aria-label="Psico T.O ando — Inicio"
+      (click)="closeMenu()"
+    >
+      <img
+        src="images/brand-logo.svg"
+        alt="Psico T.O ando. Juego con sentido, gratificante y reconfortante. Crecemos en familia."
+        width="578"
+        height="186"
+        fetchpriority="high"
+      />
+    </a>
+    <button
+      #menuToggle
+      class="icon-button menu-toggle"
+      type="button"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="main-navigation"
+      [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+      (click)="menuOpen.set(!menuOpen())"
+    >
+      <app-icon [name]="menuOpen() ? 'close' : 'menu'" />
+    </button>
+    <nav
+      id="main-navigation"
+      class="navigation"
+      [class.is-open]="menuOpen()"
+      aria-label="Navegación principal"
+    >
+      <a
+        class="nav-link"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="homeLinkOptions"
+        ariaCurrentWhenActive="page"
+        routerLink="/"
+        (click)="closeMenu()"
+        >Inicio</a
+      >
+      <a
+        class="nav-link"
+        routerLink="/sobre-nosotros"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >Sobre nosotros</a
+      >
+      <a
+        class="nav-link"
+        routerLink="/nuestros-kits"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >Nuestros kits</a
+      >
+      <a
+        class="nav-link"
+        routerLink="/asesoria-y-seguimiento"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >Asesoría y seguimiento</a
+      >
+      <a
+        class="nav-link"
+        routerLink="/recursos-para-familias"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >Recursos para familias</a
+      >
+      <a
+        class="nav-link"
+        routerLink="/blog"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >Blog</a
+      >
+      <a
+        class="nav-link"
+        routerLink="/tienda"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >Tienda</a
+      >
+      <a
+        class="nav-link account-nav-link"
+        [routerLink]="account().link"
+        routerLinkActive="is-active"
+        ariaCurrentWhenActive="page"
+        (click)="closeMenu()"
+        >{{ account().label }}</a
+      >
+    </nav>
+    <div class="header-actions">
+      <button class="booking-button" type="button" (click)="openAdvisory()">
+        <app-icon name="whatsapp" />Agenda una asesoría
+      </button>
+      <div class="cart-wrap">
+        <a
+          class="shop-link"
+          routerLink="/carrito"
+          routerLinkActive="is-current"
+          ariaCurrentWhenActive="page"
+          [attr.aria-label]="cartLabel()"
+          (click)="closeMenu()"
+          ><app-icon name="cart" /><span class="shop-label">Carrito</span>
+          @if (cart.count() > 0) {
+            <span class="cart-badge" aria-hidden="true">{{
+              cart.count() > 99 ? '99+' : cart.count()
+            }}</span>
+          }
+        </a>
+        <div class="cart-notice-region" aria-live="polite">
+          @if (cart.notice(); as notice) {
+            <div class="cart-notice" role="status">
+              <p>
+                @if (notice.added) {
+                  <strong>{{ notice.productName }}</strong> se añadió a tu carrito.
+                } @else {
+                  Tu carrito ya tiene el máximo de productos distintos.
+                }
+              </p>
+              <a class="button button--primary" routerLink="/carrito" (click)="cart.dismissNotice()"
+                >Ver carrito</a
+              >
+              <button
+                class="notice-close"
+                type="button"
+                aria-label="Cerrar aviso"
+                (click)="cart.dismissNotice()"
+              >
+                <app-icon name="close" />
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+      @if (isAdmin()) {
+        <a
+          class="account-button login-link"
+          routerLink="/admin"
+          (click)="closeMenu()"
+          >Panel</a
+        >
+      } @else if (auth.user()) {
+        <a
+          class="icon-button account-button"
+          routerLink="/mi-cuenta"
+          routerLinkActive="is-current"
+          ariaCurrentWhenActive="page"
+          aria-label="Mi cuenta"
+          (click)="closeMenu()"
+          ><span class="account-initial" aria-hidden="true">{{
+            initial()
+          }}</span></a
+        >
+      } @else {
+        <a
+          class="account-button login-link"
+          routerLink="/iniciar-sesion"
+          routerLinkActive="is-current"
+          ariaCurrentWhenActive="page"
+          (click)="closeMenu()"
+          >Iniciar sesión</a
+        >
+      }
+    </div>
+  </div>
+</header>

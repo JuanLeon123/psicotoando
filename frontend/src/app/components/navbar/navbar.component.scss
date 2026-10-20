@@ -1,0 +1,325 @@
+@use "../../../styles/tokens" as tokens;
+:host {
+  display: block;
+  position: relative;
+  z-index: 10;
+}
+.header-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding-block: 30px 8px;
+}
+.brand {
+  flex: 0 1 495px;
+  min-width: 290px;
+}
+.brand img {
+  width: 100%;
+  height: auto;
+}
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(14px, 1.6vw, 26px);
+  margin-top: 15px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.nav-link {
+  color: var(--color-text);
+  position: relative;
+  padding: 7px 0 12px;
+  background: none;
+  border: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.nav-link:hover,
+.is-active {
+  color: var(--color-primary);
+}
+.is-active::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 4px;
+  background: var(--color-green);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.shop-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  color: var(--color-ink-strong);
+  background: var(--color-green);
+  font-size: 14px;
+  font-weight: 800;
+}
+.shop-link:hover {
+  background: var(--color-yellow);
+}
+.cart-wrap {
+  position: relative;
+}
+.shop-link {
+  position: relative;
+}
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  color: var(--color-surface);
+  background: var(--color-coral-dark);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+.cart-notice {
+  position: fixed;
+  z-index: 50;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+  width: min(340px, calc(100vw - 32px));
+  padding: var(--space-3);
+  padding-right: var(--space-5);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: 0 16px 40px var(--color-shadow-soft);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.cart-notice strong {
+  color: var(--color-heading);
+}
+.cart-notice .button {
+  min-height: 44px;
+}
+.notice-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-muted);
+}
+.notice-close app-icon {
+  width: 20px;
+  height: 20px;
+}
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--color-heading);
+}
+.menu-toggle {
+  display: none;
+}
+.account-initial {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: var(--color-surface);
+  background: var(--color-primary);
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1;
+}
+.is-current .account-initial {
+  box-shadow: 0 0 0 3px var(--color-green);
+}
+.login-link {
+  padding: 10px 4px;
+  color: var(--color-heading);
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 800;
+}
+.login-link:hover,
+.login-link.is-current {
+  color: var(--color-primary);
+}
+// El menú completo necesita ~1280px; por debajo se usa el menú desplegable.
+@media (max-width: 1279px) {
+  .header-inner {
+    position: relative;
+    align-items: center;
+    padding-block: 20px 12px;
+    gap: 16px;
+  }
+  .brand {
+    flex-basis: 390px;
+    min-width: 0;
+    margin-right: auto;
+  }
+  .menu-toggle {
+    display: grid;
+    order: 3;
+  }
+  .header-actions {
+    margin: 0;
+  }
+  .account-button {
+    display: none;
+  }
+  .navigation {
+    display: none;
+    position: absolute;
+    top: calc(100% - 4px);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    margin: 0;
+    padding: 20px;
+    border: 1px solid var(--color-line);
+    border-radius: 18px;
+    background: var(--color-surface);
+    box-shadow: 0 16px 40px var(--color-shadow-soft);
+  }
+  .navigation.is-open {
+    display: flex;
+  }
+  .nav-link {
+    padding: 12px;
+    text-align: left;
+    font-size: 15px;
+  }
+  .is-active::after {
+    left: 12px;
+    right: auto;
+    width: 28px;
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .header-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 0 10px;
+    padding-block: 17px 12px;
+  }
+  .brand {
+    grid-row: 1 / 3;
+    width: min(100%, 305px);
+  }
+  .menu-toggle {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .header-actions {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .shop-link {
+    padding: 10px;
+    background: transparent;
+  }
+  .shop-label {
+    display: none;
+  }
+}
+
+.booking-button {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .header-inner {
+    width: min(100% - 40px, 1540px);
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 20px;
+    padding-block: 14px 8px;
+  }
+  .brand {
+    flex: 0 1 290px;
+    min-width: 220px;
+  }
+  .navigation {
+    order: 0;
+    width: auto;
+    margin-block: 0;
+    gap: clamp(12px, 1.05vw, 24px);
+  }
+  .nav-link {
+    font-size: clamp(13px, 0.95vw, 14px);
+  }
+  .header-actions {
+    margin: 0;
+    gap: 12px;
+  }
+  .shop-link {
+    background: none;
+    padding: 10px;
+  }
+  .shop-label {
+    display: none;
+  }
+  .account-nav-link {
+    display: none;
+  }
+  .login-link {
+    font-size: clamp(13px, 0.95vw, 14px);
+  }
+  .booking-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 17px;
+    min-height: 40px;
+    border: 0;
+    border-radius: var(--radius-pill);
+    color: var(--color-surface);
+    background: var(--color-green-dark);
+    white-space: nowrap;
+    font-size: clamp(13px, 0.95vw, 14px);
+    font-weight: 800;
+  }
+  .booking-button:hover {
+    background: var(--color-heading);
+  }
+  .booking-button app-icon {
+    width: 21px;
+    height: 21px;
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .cart-notice {
+    right: var(--space-2);
+    bottom: var(--space-2);
+    left: var(--space-2);
+    width: auto;
+  }
+}

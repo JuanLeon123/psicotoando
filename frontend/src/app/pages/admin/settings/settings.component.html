@@ -1,0 +1,225 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Ajustes</h1>
+      <p class="page-intro">
+        Datos de contacto, redes sociales, envío y pagos de la tienda. Deja un
+        campo vacío si aún no lo tienes: la web lo ocultará.
+      </p>
+    </div>
+  </header>
+
+  <form class="panel form-stack settings-form" novalidate [formGroup]="form" (ngSubmit)="submit()">
+    <div class="live-region" aria-live="polite">
+      @if (serverError(); as message) {
+        <p class="form-alert form-alert--error">{{ message }}</p>
+      }
+      @if (saved()) {
+        <p class="form-alert form-alert--success">
+          Ajustes guardados. La web ya usa los nuevos datos.
+        </p>
+      }
+    </div>
+
+    <fieldset class="settings-group">
+      <legend>Contacto</legend>
+      <div class="form-field">
+        <label class="form-label" for="settings-whatsappNumber">WhatsApp</label>
+        <input
+          class="form-input"
+          id="settings-whatsappNumber"
+          type="tel"
+          autocomplete="off"
+          placeholder="+57 300 123 4567"
+          formControlName="whatsappNumber"
+          aria-describedby="settings-whatsappNumber-hint"
+          [attr.aria-invalid]="!!errorFor('whatsappNumber')"
+        />
+        <p class="form-hint" id="settings-whatsappNumber-hint">
+          Con el indicativo del país. Lo usa el botón «Agenda una asesoría» del
+          menú, la portada, el footer y la página de Asesoría.
+        </p>
+        @if (errorFor("whatsappNumber"); as message) {
+          <p class="form-error">{{ message }}</p>
+        }
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="settings-contactEmail">Correo de contacto</label>
+        <input
+          class="form-input"
+          id="settings-contactEmail"
+          type="email"
+          autocomplete="off"
+          placeholder="hola@tudominio.com"
+          formControlName="contactEmail"
+          aria-describedby="settings-contactEmail-hint"
+          [attr.aria-invalid]="!!errorFor('contactEmail')"
+        />
+        <p class="form-hint" id="settings-contactEmail-hint">
+          Se muestra en el footer para que las familias puedan escribirte.
+        </p>
+        @if (errorFor("contactEmail"); as message) {
+          <p class="form-error">{{ message }}</p>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="settings-group">
+      <legend>Redes sociales</legend>
+      <div class="form-field">
+        <label class="form-label" for="settings-instagramUrl">Instagram</label>
+        <input
+          class="form-input"
+          id="settings-instagramUrl"
+          type="url"
+          autocomplete="off"
+          placeholder="https://www.instagram.com/tu_cuenta"
+          formControlName="instagramUrl"
+          [attr.aria-invalid]="!!errorFor('instagramUrl')"
+        />
+        @if (errorFor("instagramUrl"); as message) {
+          <p class="form-error">{{ message }}</p>
+        }
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="settings-facebookUrl"
+          >Facebook (página o Club de Padres)</label
+        >
+        <input
+          class="form-input"
+          id="settings-facebookUrl"
+          type="url"
+          autocomplete="off"
+          placeholder="https://www.facebook.com/groups/tu_grupo"
+          formControlName="facebookUrl"
+          aria-describedby="settings-social-hint"
+          [attr.aria-invalid]="!!errorFor('facebookUrl')"
+        />
+        <p class="form-hint" id="settings-social-hint">
+          Los iconos de redes del footer y de la página de Asesoría enlazan
+          aquí. Sin enlaces, la web muestra «Enlaces disponibles próximamente».
+        </p>
+        @if (errorFor("facebookUrl"); as message) {
+          <p class="form-error">{{ message }}</p>
+        }
+      </div>
+    </fieldset>
+
+    <fieldset class="settings-group">
+      <legend>Envío</legend>
+      <div class="field-row">
+        <div class="form-field">
+          <label class="form-label" for="settings-shippingFlatCop"
+            >Valor del envío en pesos</label
+          >
+          <input
+            class="form-input"
+            id="settings-shippingFlatCop"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="0"
+            formControlName="shippingFlatCop"
+            aria-describedby="settings-shippingFlatCop-hint"
+            [attr.aria-invalid]="!!errorFor('shippingFlatCop')"
+          />
+          <p class="form-hint" id="settings-shippingFlatCop-hint">
+            Se suma a cada pedido. 0 o vacío = envío gratis.
+          </p>
+          @if (errorFor("shippingFlatCop"); as message) {
+            <p class="form-error">{{ message }}</p>
+          }
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="settings-freeShippingFromCop"
+            >Envío gratis desde <span class="optional">(opcional)</span></label
+          >
+          <input
+            class="form-input"
+            id="settings-freeShippingFromCop"
+            type="text"
+            inputmode="numeric"
+            autocomplete="off"
+            placeholder="Por ejemplo 300.000"
+            formControlName="freeShippingFromCop"
+            aria-describedby="settings-freeShippingFromCop-hint"
+            [attr.aria-invalid]="!!errorFor('freeShippingFromCop')"
+          />
+          <p class="form-hint" id="settings-freeShippingFromCop-hint">
+            Si el subtotal llega a este valor, el envío no se cobra.
+          </p>
+          @if (errorFor("freeShippingFromCop"); as message) {
+            <p class="form-error">{{ message }}</p>
+          }
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button class="button button--primary" type="submit" [attr.aria-disabled]="pending()">
+        {{ pending() ? "Guardando…" : "Guardar ajustes" }}
+      </button>
+    </div>
+  </form>
+
+  <section class="panel wompi-card" aria-labelledby="wompi-title">
+    <div class="wompi-head">
+      <h2 id="wompi-title">Pagos con Wompi</h2>
+      @if (payments(); as config) {
+        @if (config.enabled) {
+          <span class="badge badge--published">
+            Activo · {{ config.environment === "production" ? "Producción (dinero real)" : "Pruebas (sandbox)" }}
+          </span>
+        } @else {
+          <span class="badge badge--draft">Sin configurar</span>
+        }
+      }
+    </div>
+    @if (payments()?.enabled) {
+      <p class="panel-intro">
+        La tienda ya cobra en línea. Las llaves se gestionan en el servidor, no
+        en este panel.
+      </p>
+    } @else {
+      <p class="panel-intro">
+        Mientras no haya llaves, el carrito muestra «El pago en línea se
+        activará muy pronto» y ofrece pedir por WhatsApp.
+      </p>
+    }
+    <ol class="wompi-steps">
+      <li>
+        En el panel de Wompi, entra a <strong>Desarrolladores</strong> y copia
+        la llave pública, la privada, el secreto de integridad y el secreto de
+        eventos.
+      </li>
+      <li>
+        Pégalas en <code>backend/.env</code> (<code>WOMPI_PUBLIC_KEY</code>,
+        <code>WOMPI_PRIVATE_KEY</code>, <code>WOMPI_INTEGRITY_SECRET</code>,
+        <code>WOMPI_EVENTS_SECRET</code>) y elige
+        <code>WOMPI_ENV=sandbox</code> para pruebas o
+        <code>production</code> para cobrar de verdad.
+      </li>
+      <li>
+        Recrea el backend para que las lea:
+        <code>docker compose up -d --force-recreate backend</code>
+      </li>
+      <li>
+        En Wompi, en <strong>URL de eventos</strong>, pon esta dirección (con
+        el dominio público de la web):
+        <span class="webhook-row">
+          <input
+            class="form-input webhook-input"
+            id="settings-webhook"
+            type="text"
+            readonly
+            [value]="webhookUrl"
+            aria-label="URL de eventos para Wompi"
+          />
+          <button class="button button--ghost button--small" type="button" (click)="copyWebhook()">
+            {{ copied() ? "Copiada" : "Copiar" }}
+          </button>
+        </span>
+      </li>
+    </ol>
+  </section>
+</div>

@@ -1,0 +1,65 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+h2 {
+  text-align: center;
+}
+.values-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-4);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.value {
+  --value-color: var(--color-primary);
+  text-align: center;
+}
+.value--coral {
+  --value-color: var(--color-coral);
+}
+.value--yellow {
+  --value-color: var(--color-yellow);
+}
+.value--green {
+  --value-color: var(--color-green);
+}
+.value-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto var(--space-2);
+  border-radius: 50%;
+  color: var(--color-surface);
+  background: var(--value-color);
+}
+.value-icon app-icon {
+  width: 32px;
+  height: 32px;
+}
+h3 {
+  margin-bottom: var(--space-1);
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+p {
+  max-width: 32ch;
+  margin-inline: auto;
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  .values-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .values-list {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}

@@ -1,0 +1,31 @@
+<section class="advisory-hero" aria-labelledby="advisory-title">
+  <div class="hero-copy">
+    <h1 id="advisory-title">Asesoría y <span>seguimiento</span></h1>
+    <p class="lead">
+      Te acompañamos para que el proceso con nuestros kits tenga sentido, sea
+      efectivo y se adapte a las necesidades de tu hijo o hija.
+    </p>
+    <button
+      class="mobile-booking button button--primary"
+      type="button"
+      (click)="info.openAdvisory()"
+    >
+      <app-icon name="whatsapp" />Agenda una asesoría
+    </button>
+  </div>
+  <figure class="hero-visual">
+    <div class="hero-photo">
+      <img
+        ngSrc="images/advisory-hero.webp"
+        fill
+        priority
+        sizes="(max-width: 640px) 100vw, 50vw"
+        alt="Una mamá y su hija participan juntas en una videollamada mientras juegan con materiales de colores."
+      />
+    </div>
+    <figcaption class="hero-note">
+      <app-icon name="heart" />
+      <p>Orientación cercana, práctica y personalizada para avanzar juntos.</p>
+    </figcaption>
+  </figure>
+</section>

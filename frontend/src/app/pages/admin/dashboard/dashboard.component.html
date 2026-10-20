@@ -1,0 +1,167 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Hola, {{ auth.user()?.fullName ?? "equipo" }}</h1>
+      <p class="page-intro">
+        Desde aquí gestionas los productos, los pedidos y los datos de contacto
+        de la tienda.
+      </p>
+    </div>
+    <a class="button button--primary button--small" routerLink="/admin/productos/nuevo"
+      ><app-icon name="box" />Nuevo producto</a
+    >
+  </header>
+
+  <section aria-labelledby="summary-title">
+    <h2 id="summary-title" class="sr-only">Cifras principales</h2>
+    @if (error(); as message) {
+      <div class="form-alert form-alert--error" role="alert">
+        {{ message }}
+        <button class="text-link retry" type="button" (click)="load()">
+          Reintentar
+        </button>
+      </div>
+    } @else {
+      <ul class="stats" [attr.aria-busy]="!summary()">
+        <li class="stat">
+          <span class="stat-label">Clientes registrados</span>
+          <strong class="stat-value">{{ summary()?.customers?.total ?? "—" }}</strong>
+        </li>
+        <li class="stat">
+          <span class="stat-label">Nuevos en los últimos 30 días</span>
+          <strong class="stat-value">{{
+            summary()?.customers?.last30Days ?? "—"
+          }}</strong>
+        </li>
+        <li class="stat">
+          <span class="stat-label">Productos publicados</span>
+          <strong class="stat-value"
+            >{{ summary()?.products?.published ?? "—" }}
+            @if (summary(); as s) {
+              <small>de {{ s.products.total }}</small>
+            }
+          </strong>
+        </li>
+      </ul>
+    }
+  </section>
+
+  @if (summary(); as s) {
+    <section class="sales" aria-labelledby="sales-title">
+      <div class="section-head">
+        <h2 id="sales-title">Ventas de los últimos 30 días</h2>
+        <a class="text-link" routerLink="/admin/pedidos">Ver pedidos</a>
+      </div>
+      <ul class="stats stats--sales">
+        <li class="stat">
+          <span class="stat-label">Ventas</span>
+          <strong class="stat-value stat-value--money">{{ formatCop(s.sales.last30Days.revenueCop) }}</strong>
+        </li>
+        <li class="stat">
+          <span class="stat-label">Pedidos pagados</span>
+          <strong class="stat-value">{{ s.sales.last30Days.approvedOrders }}</strong>
+        </li>
+        <li class="stat">
+          <span class="stat-label">Ticket promedio</span>
+          <strong class="stat-value stat-value--money">{{ formatCop(s.sales.last30Days.averageTicketCop) }}</strong>
+        </li>
+        <li class="stat" [class.stat--attention]="s.sales.pendingToShip > 0">
+          <span class="stat-label">Por enviar</span>
+          <strong class="stat-value">{{ s.sales.pendingToShip }}</strong>
+          @if (s.sales.pendingToShip > 0) {
+            <a class="stat-link" routerLink="/admin/pedidos">Preparar envíos</a>
+          }
+        </li>
+      </ul>
+
+      <div class="sales-grid">
+        <section class="panel" aria-labelledby="chart-title">
+          <h3 id="chart-title">Ventas por día</h3>
+          @if (chart().max > 0) {
+            <div
+              class="chart"
+              role="img"
+              [attr.aria-label]="'Ventas diarias de los últimos 30 días. Mejor día: ' + formatCop(chart().max) + '. Detalle en la tabla siguiente.'"
+            >
+              @for (day of chart().days; track day.date) {
+                <span
+                  class="bar"
+                  [style.height.%]="day.height"
+                  [class.bar--empty]="day.revenueCop === 0"
+                  [attr.title]="day.label + ': ' + formatCop(day.revenueCop)"
+                ></span>
+              }
+            </div>
+            <div class="chart-axis" aria-hidden="true">
+              <span>{{ chart().days[0].label }}</span>
+              <span>Hoy</span>
+            </div>
+            <table class="sr-only">
+              <caption>Ventas por día</caption>
+              <thead><tr><th scope="col">Día</th><th scope="col">Ventas</th></tr></thead>
+              <tbody>
+                @for (day of chart().days; track day.date) {
+                  @if (day.revenueCop > 0) {
+                    <tr><td>{{ day.label }}</td><td>{{ formatCop(day.revenueCop) }}</td></tr>
+                  }
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="panel-intro">
+              Aún no hay ventas en este periodo. Cuando una familia pague en la
+              tienda, verás aquí cada día.
+            </p>
+          }
+        </section>
+        <section class="panel" aria-labelledby="top-title">
+          <h3 id="top-title">Lo más vendido</h3>
+          @if (s.sales.topProducts.length) {
+            <ol class="top-list">
+              @for (item of s.sales.topProducts; track item.name) {
+                <li>
+                  <span>{{ item.name }}</span>
+                  <strong>{{ item.units }} {{ item.units === 1 ? "unidad" : "unidades" }}</strong>
+                </li>
+              }
+            </ol>
+          } @else {
+            <p class="panel-intro">Todavía no hay productos vendidos.</p>
+          }
+          <p class="all-time">
+            Desde el inicio: {{ s.sales.allTime.approvedOrders }}
+            {{ s.sales.allTime.approvedOrders === 1 ? "pedido" : "pedidos" }} ·
+            {{ formatCop(s.sales.allTime.revenueCop) }}
+          </p>
+        </section>
+      </div>
+    </section>
+  }
+
+  <div class="dashboard-grid">
+    <section class="panel" aria-labelledby="actions-title">
+      <h2 id="actions-title">Accesos rápidos</h2>
+      <ul class="actions">
+        <li>
+          <a class="action" routerLink="/admin/productos/nuevo">
+            <app-icon name="box" />
+            <span><strong>Crear un producto</strong>Añade un kit nuevo a la tienda.</span>
+          </a>
+        </li>
+        <li>
+          <a class="action" routerLink="/admin/productos">
+            <app-icon name="pencil" />
+            <span><strong>Editar productos</strong>Precios, fotos, inventario y publicación.</span>
+          </a>
+        </li>
+        <li>
+          <a class="action" routerLink="/admin/ajustes">
+            <app-icon name="chat" />
+            <span><strong>Contacto y redes</strong>WhatsApp, correo, Instagram y Facebook.</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+  </div>
+</div>

@@ -1,0 +1,111 @@
+@use "../../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.story {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(40px, 5vw, 80px);
+  align-items: start;
+}
+h1 {
+  color: var(--color-heading);
+  font-size: var(--fs-h1);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+h1 span {
+  color: var(--color-coral-heading);
+}
+.story-tagline {
+  max-width: var(--measure);
+  margin-top: var(--space-2);
+  color: var(--color-primary);
+  font-size: var(--fs-lead);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.story-copy {
+  max-width: var(--measure);
+  margin-top: var(--space-4);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.story-copy p + p {
+  margin-top: var(--space-2);
+}
+.story-visual {
+  position: sticky;
+  top: var(--space-3);
+  margin: 0;
+}
+.story-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 32px;
+}
+.story-photo img {
+  object-fit: cover;
+  object-position: 48% 50%;
+}
+.story-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 340px;
+  margin: calc(var(--space-5) * -1) 0 0 var(--space-3);
+  position: relative;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-card);
+  color: var(--color-surface);
+  background: var(--color-green-dark);
+  box-shadow: 0 12px 30px var(--color-shadow-soft);
+}
+.story-note app-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+.story-note p {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+@media (max-width: tokens.$breakpoint-tablet) {
+  /* Título, foto y después el relato. */
+  .story {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .story-text {
+    display: contents;
+  }
+  .story-visual {
+    position: static;
+    order: 1;
+    width: 100%;
+    max-width: 640px;
+    margin-top: var(--space-4);
+  }
+  .story-copy {
+    order: 2;
+    margin-top: var(--space-5);
+  }
+  .story-photo {
+    aspect-ratio: 16 / 11;
+  }
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .story-photo {
+    aspect-ratio: 4 / 3;
+    border-radius: 24px;
+  }
+  .story-note {
+    margin: calc(var(--space-4) * -1) var(--space-2) 0;
+  }
+  .story-copy {
+    margin-top: var(--space-4);
+  }
+}

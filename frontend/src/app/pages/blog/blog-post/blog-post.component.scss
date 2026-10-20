@@ -1,0 +1,125 @@
+@use "../../../../styles/tokens" as tokens;
+:host {
+  display: block;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--color-primary);
+  font-weight: 800;
+}
+.back-link app-icon {
+  width: 20px;
+  height: 20px;
+  transform: rotate(180deg);
+}
+.article,
+.article-skeleton,
+.post-message {
+  max-width: 760px;
+  margin: var(--space-3) auto 0;
+}
+.article {
+  display: grid;
+  gap: var(--space-4);
+}
+.article-header {
+  display: grid;
+  gap: var(--space-2);
+}
+.article-header h1 {
+  font-size: var(--fs-h1);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.article-meta {
+  color: var(--color-muted);
+  font-size: 15px;
+}
+.article-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-card);
+  background: var(--color-cream);
+}
+.article-body {
+  max-width: var(--measure);
+}
+.related {
+  max-width: 760px;
+  margin: var(--section-gap) auto 0;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-line);
+}
+.related h2 {
+  font-size: var(--fs-h3);
+  font-weight: 800;
+}
+.related ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.related-card {
+  display: grid;
+  gap: var(--space-1);
+}
+.related-card img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: 14px;
+  background: var(--color-cream);
+}
+.related-title {
+  color: var(--color-heading);
+  font-weight: 800;
+  line-height: 1.35;
+}
+.related-card:hover .related-title {
+  color: var(--color-primary);
+}
+.related-meta {
+  color: var(--color-muted);
+  font-size: var(--fs-small);
+}
+.article-skeleton {
+  display: grid;
+  gap: var(--space-2);
+}
+.article-skeleton span {
+  height: 28px;
+  border-radius: 10px;
+  background: var(--color-cream);
+}
+.article-skeleton span:first-child {
+  width: 70%;
+  height: 48px;
+}
+.article-skeleton span:last-child {
+  height: 320px;
+}
+.post-message {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+.post-message h1 {
+  font-size: var(--fs-h2);
+  font-weight: 900;
+}
+.post-message p {
+  color: var(--color-muted);
+}
+@media (max-width: tokens.$breakpoint-mobile) {
+  .related ul {
+    grid-template-columns: 1fr;
+  }
+}

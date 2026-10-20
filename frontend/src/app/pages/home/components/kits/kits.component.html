@@ -1,0 +1,37 @@
+<section class="kits-section" id="nuestros-kits" aria-labelledby="kits-title">
+  <div class="kits-inner container">
+    <div class="kits-copy">
+      <p class="eyebrow">Nuestros kits</p>
+      <h2 id="kits-title">
+        Materiales terapéuticos<br class="desktop-break" />
+        para jugar, aprender y crecer
+      </h2>
+      <p class="kits-description">
+        Kits completos con actividades guiadas y objetivos terapéuticos para
+        acompañar el desarrollo de tu hijo en casa.
+      </p>
+      <a class="button button--coral" routerLink="/tienda"
+        >Ver todos los kits<app-icon name="bag"
+      /></a>
+    </div>
+    @if (kits(); as kits) {
+      @if (kits.length) {
+        <div class="kits-grid" role="group" aria-label="Catálogo de kits">
+          @for (kit of kits; track kit.id) {
+            <app-kit-card [kit]="kit" (selected)="openKit($event)" />
+          }
+        </div>
+      } @else {
+        <p class="kits-empty">
+          Estamos preparando nuevos kits. Muy pronto podrás verlos aquí.
+        </p>
+      }
+    } @else {
+      <div class="kits-grid" aria-hidden="true">
+        @for (placeholder of [1, 2, 3]; track placeholder) {
+          <div class="kit-skeleton"></div>
+        }
+      </div>
+    }
+  </div>
+</section>

@@ -1,0 +1,124 @@
+<footer class="site-footer">
+  <app-decorative-leaves class="footer-leaves" />
+  <div class="footer-inner container">
+    <div class="footer-brand">
+      <a class="footer-logo" routerLink="/" aria-label="Psico T.O ando — Inicio">
+        <img
+          src="images/brand-logo.svg"
+          alt="Psico T.O ando"
+          width="578"
+          height="186"
+          loading="lazy"
+        />
+      </a>
+      <p>
+        Materiales terapéuticos y acompañamiento profesional para que cada
+        actividad en casa tenga sentido, sea gratificante y reconfortante.
+      </p>
+      <button
+        class="button button--primary footer-cta"
+        type="button"
+        (click)="info.openAdvisory()"
+      >
+        <app-icon name="whatsapp" />Agenda una asesoría
+      </button>
+    </div>
+
+    <nav class="footer-column" aria-labelledby="footer-explore-title">
+      <h2 id="footer-explore-title">Explora</h2>
+      <ul>
+        <li><a routerLink="/">Inicio</a></li>
+        <li><a routerLink="/sobre-nosotros">Sobre nosotros</a></li>
+        <li><a routerLink="/nuestros-kits">Nuestros kits</a></li>
+        <li>
+          <a routerLink="/asesoria-y-seguimiento">Asesoría y seguimiento</a>
+        </li>
+        <li>
+          <a routerLink="/recursos-para-familias">Recursos para familias</a>
+        </li>
+        <li><a routerLink="/blog">Blog</a></li>
+      </ul>
+    </nav>
+
+    <nav class="footer-column" aria-labelledby="footer-account-title">
+      <h2 id="footer-account-title">Tu espacio</h2>
+      <ul>
+        <li>
+          <a routerLink="/tienda"><app-icon name="cart" />Tienda</a>
+        </li>
+        @if (auth.user()?.role === 'admin') {
+          <li>
+            <a routerLink="/admin"><app-icon name="user" />Panel</a>
+          </li>
+        } @else if (auth.user()) {
+          <li>
+            <a routerLink="/mi-cuenta"><app-icon name="user" />Mi cuenta</a>
+          </li>
+        } @else {
+          <li>
+            <a routerLink="/iniciar-sesion"
+              ><app-icon name="user" />Iniciar sesión</a
+            >
+          </li>
+          <li>
+            <a routerLink="/registro"><app-icon name="heart" />Crear cuenta</a>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <div class="footer-column footer-social">
+      <h2>Síguenos</h2>
+      <p>Ideas, consejos y actividades para seguir aprendiendo en familia.</p>
+      @if (settings().instagramUrl || settings().facebookUrl) {
+        <div class="social-icons">
+          @if (settings().instagramUrl; as url) {
+            <a
+              class="social-icon social-icon--instagram"
+              [href]="url"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram de Psico T.O ando (se abre en otra pestaña)"
+              ><app-icon name="instagram"
+            /></a>
+          }
+          @if (settings().facebookUrl; as url) {
+            <a
+              class="social-icon social-icon--facebook"
+              [href]="url"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook de Psico T.O ando (se abre en otra pestaña)"
+              ><app-icon name="facebook"
+            /></a>
+          }
+        </div>
+      } @else {
+        <div class="social-icons" aria-hidden="true">
+          <span class="social-icon social-icon--instagram"
+            ><app-icon name="instagram" /></span
+          ><span class="social-icon social-icon--facebook"
+            ><app-icon name="facebook"
+          /></span>
+        </div>
+        <p class="availability">Enlaces disponibles próximamente.</p>
+      }
+      @if (settings().contactEmail; as email) {
+        <a class="contact-email" [href]="'mailto:' + email">{{ email }}</a>
+      }
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <p>© {{ year }} Psico T.O ando</p>
+      <p>
+        Juego con sentido. Crecemos en familia.<span
+          class="footer-heart"
+          aria-hidden="true"
+          >♥</span
+        >
+      </p>
+    </div>
+  </div>
+</footer>
