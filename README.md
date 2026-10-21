@@ -38,6 +38,11 @@ npm start                     # http://localhost:4200 (proxy de /api al backend)
 
 Más detalles en [backend/README.md](backend/README.md) y [frontend/docs](frontend/docs).
 
+## Producción
+
+https://psicotoando.com corre en el servidor motrix (pm2 + nginx + túnel Cloudflare, sin Docker).
+Publicar: `scripts/publicar-motrix.sh`. Detalles en [deploy/motrix/README.md](deploy/motrix/README.md).
+
 ## Panel de administración
 
 La cuenta de administración se define en `backend/.env` (`ADMIN_EMAIL` y `ADMIN_PASSWORD`). Al arrancar, el backend la crea, y al iniciar sesión con ella se abre http://localhost:4200/admin. Ahí se gestionan los productos de la tienda y los datos de contacto. Más detalles en [frontend/docs/admin.md](frontend/docs/admin.md).

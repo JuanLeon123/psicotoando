@@ -14,6 +14,8 @@ import { UPLOADS_ROUTE } from './catalog/product-images.service';
 /** Shared by main.ts and the e2e tests so both run the same HTTP pipeline. */
 export function configureApp(app: INestApplication): void {
   const config = app.get(ConfigService);
+  // Detrás de nginx (mismo equipo): req.ip es la IP real del cliente para el límite de peticiones.
+  app.getHttpAdapter().getInstance().set('trust proxy', 'loopback');
   app.setGlobalPrefix('api');
   app.use(helmet());
   app.use(cookieParser());
