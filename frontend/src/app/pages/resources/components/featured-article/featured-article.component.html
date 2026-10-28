@@ -2,11 +2,12 @@
   <div class="article-photo">
     <div class="photo-frame">
       <img
-        ngSrc="images/resources-family.webp"
+        [ngSrc]="photo().url"
         fill
         priority
         sizes="(max-width: 1024px) 100vw, 40vw"
-        alt="Una mamá y su hija comparten un momento de juego con bloques de colores en casa."
+        [alt]="photo().alt"
+        [style.object-position]="photo().position"
       />
     </div>
   </div>

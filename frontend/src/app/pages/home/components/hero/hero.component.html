@@ -35,12 +35,13 @@
     <div class="hero-visual">
       <div class="photo-wrap">
         <img
-          ngSrc="images/family-play.webp"
+          [ngSrc]="photo().url"
           width="1448"
           height="1086"
           priority
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 52vw, 58vw"
-          alt="Una mamá y su hijo disfrutan construyendo juntos con bloques de madera de colores."
+          [alt]="photo().alt"
+          [style.object-position]="photo().position"
         />
       </div>
       <app-decorative-leaves class="leaves" />

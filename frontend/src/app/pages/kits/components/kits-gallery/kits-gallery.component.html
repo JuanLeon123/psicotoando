@@ -1,12 +1,13 @@
 <ul class="kits-gallery" aria-label="Actividades de la Caja W°alli">
-  @for (photo of photos; track photo.image; let first = $first) {
+  @for (photo of photos; track $index; let first = $first) {
     <li>
       <img
-        [ngSrc]="photo.image"
+        [ngSrc]="photo().url"
         fill
         [priority]="first"
         sizes="(max-width: 1024px) 50vw, 25vw"
-        [alt]="photo.alt"
+        [alt]="photo().alt"
+        [style.object-position]="photo().position"
       />
     </li>
   }

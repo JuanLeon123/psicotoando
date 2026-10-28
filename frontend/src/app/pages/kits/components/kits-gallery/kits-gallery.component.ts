@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { KIT_PHOTOS } from '../../data/kits.data';
+import { SiteImagesService } from '../../../../core/site-images/site-images.service';
 
 @Component({
   selector: 'app-kits-gallery',
@@ -10,5 +10,11 @@ import { KIT_PHOTOS } from '../../data/kits.data';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KitsGalleryComponent {
-  protected readonly photos = KIT_PHOTOS;
+  private readonly images = inject(SiteImagesService);
+  protected readonly photos = [
+    this.images.image('kits.gallery.1'),
+    this.images.image('kits.gallery.2'),
+    this.images.image('kits.gallery.3'),
+    this.images.image('kits.gallery.4'),
+  ];
 }

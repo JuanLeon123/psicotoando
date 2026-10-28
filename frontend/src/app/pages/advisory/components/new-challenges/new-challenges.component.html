@@ -20,11 +20,12 @@
     class="activity-gallery"
     aria-label="Ejemplos de actividades para seguir aprendiendo"
   >
-    @for (activity of activities; track activity.image) {
+    @for (activity of activities; track $index) {
       <li>
         <img
-          [src]="activity.image"
-          [alt]="activity.alt"
+          [src]="activity().url"
+          [alt]="activity().alt"
+          [style.object-position]="activity().position"
           width="640"
           height="640"
           loading="lazy"

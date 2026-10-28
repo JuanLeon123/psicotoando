@@ -16,11 +16,12 @@
   <figure class="hero-visual">
     <div class="hero-photo">
       <img
-        ngSrc="images/advisory-hero.webp"
+        [ngSrc]="photo().url"
         fill
         priority
         sizes="(max-width: 640px) 100vw, 50vw"
-        alt="Una mamá y su hija participan juntas en una videollamada mientras juegan con materiales de colores."
+        [alt]="photo().alt"
+        [style.object-position]="photo().position"
       />
     </div>
     <figcaption class="hero-note">

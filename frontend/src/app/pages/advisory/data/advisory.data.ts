@@ -50,22 +50,3 @@ export const FOLLOW_UP_SERVICES: readonly AdvisoryStep[] = [
     tone: 'yellow',
   },
 ];
-
-export const ACTIVITY_GALLERY = [
-  {
-    image: 'images/advisory-matching.webp',
-    alt: 'Caja de actividades con piezas de colores para asociar y encajar.',
-  },
-  {
-    image: 'images/advisory-sorting.webp',
-    alt: 'Actividad de clasificación de pompones por colores con pinzas y recipientes.',
-  },
-  {
-    image: 'images/advisory-tracing.webp',
-    alt: 'Una mano traza líneas con tiza sobre una pizarra de madera.',
-  },
-  {
-    image: 'images/advisory-stacking.webp',
-    alt: 'Vasos de colores para apilar y reproducir patrones sobre una bandeja.',
-  },
-] as const;

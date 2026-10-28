@@ -1,4 +1,9 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import {
   provideHttpClient,
   withFetch,
@@ -8,6 +13,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth.interceptor';
 import { provideAuthSession } from './core/auth/auth.providers';
+import { SiteImagesService } from './core/site-images/site-images.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,5 +27,6 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
     provideAuthSession(),
+    provideAppInitializer(() => inject(SiteImagesService).load()),
   ],
 };

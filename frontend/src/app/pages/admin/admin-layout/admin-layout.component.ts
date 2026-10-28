@@ -43,6 +43,7 @@ export class AdminLayoutComponent {
     { label: 'Productos', path: '/admin/productos', icon: 'box', exact: false },
     { label: 'Pedidos', path: '/admin/pedidos', icon: 'clipboard', exact: false },
     { label: 'Blog', path: '/admin/blog', icon: 'lightbulb', exact: false },
+    { label: 'Imágenes', path: '/admin/imagenes', icon: 'image', exact: false },
     { label: 'Ajustes', path: '/admin/ajustes', icon: 'chat', exact: false },
   ];
   protected readonly menuOpen = signal(false);

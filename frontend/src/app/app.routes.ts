@@ -206,6 +206,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'imagenes',
+        title: 'Imágenes de la web | Panel Psico T.O ando',
+        loadComponent: () =>
+          import('./pages/admin/site-images/site-images.component').then(
+            (m) => m.AdminSiteImagesComponent,
+          ),
+      },
+      {
         path: 'ajustes',
         title: 'Ajustes | Panel Psico T.O ando',
         loadComponent: () =>

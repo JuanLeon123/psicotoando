@@ -3,6 +3,11 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AdminProduct, ProductInput } from '../catalog/product.models';
 import { SiteSettings } from '../settings/site-settings.models';
+import {
+  SiteImage,
+  SiteImageInput,
+  SiteImageKey,
+} from '../site-images/site-images.models';
 import { AdminSummary } from './admin.models';
 import {
   AdminOrderDetail,
@@ -55,6 +60,15 @@ export class AdminApiService {
 
   updateSettings(body: Partial<SiteSettings>): Observable<SiteSettings> {
     return this.http.put<SiteSettings>('/api/admin/settings', body);
+  }
+
+  setSiteImage(key: SiteImageKey, body: SiteImageInput): Observable<SiteImage> {
+    return this.http.put<SiteImage>(`/api/admin/site-images/${key}`, body);
+  }
+
+  /** Vuelve a la imagen original del hueco. */
+  resetSiteImage(key: SiteImageKey): Observable<void> {
+    return this.http.delete<void>(`/api/admin/site-images/${key}`);
   }
 
   orders(filters: AdminOrderFilters = {}): Observable<AdminOrderPage> {

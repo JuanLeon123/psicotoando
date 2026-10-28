@@ -8,5 +8,8 @@
 .family-illustration {
   width: min(320px, 70%);
   height: auto;
+  // Una ilustración subida desde el panel se ve entera, sea cual sea su forma.
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
   margin: var(--space-6) auto 0;
 }

@@ -5,7 +5,7 @@
     <app-about-values />
     <img
       class="family-illustration"
-      ngSrc="images/about-family.webp"
+      [ngSrc]="illustration().url"
       width="960"
       height="720"
       sizes="(max-width: 640px) 70vw, 25vw"

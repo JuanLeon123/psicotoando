@@ -1,0 +1,227 @@
+<div class="admin-page">
+  <header class="page-header">
+    <div>
+      <h1>Imágenes de la web</h1>
+      <p class="page-intro">
+        Elige qué foto aparece en cada parte de la web. Puedes subir una nueva o
+        usar una de la biblioteca, la misma que usa el blog. Mientras no cambies
+        un espacio, se muestra la foto original.
+      </p>
+    </div>
+  </header>
+
+  <div class="live-region" aria-live="polite">
+    @if (message(); as text) {
+      <p class="form-alert form-alert--success">{{ text }}</p>
+    }
+    @if (error(); as text) {
+      <p class="form-alert form-alert--error">{{ text }}</p>
+    }
+  </div>
+
+  @for (group of groups(); track group.page) {
+    <section class="page-group" [attr.aria-labelledby]="'group-' + $index">
+      <h2 [id]="'group-' + $index">{{ group.page }}</h2>
+      <ul class="slot-grid">
+        @for (card of group.cards; track card.slot.key) {
+          <li class="panel slot-card">
+            <div
+              class="slot-preview"
+              [class.is-contain]="card.slot.fit === 'contain'"
+              [style.aspect-ratio]="card.slot.previews[0].ratio"
+            >
+              <img
+                [src]="card.url"
+                alt=""
+                loading="lazy"
+                [style.object-position]="card.position"
+              />
+            </div>
+            <div class="slot-info">
+              <div class="slot-title">
+                <h3>{{ card.slot.label }}</h3>
+                @if (card.custom) {
+                  <span class="badge badge--published">Cambiada</span>
+                } @else {
+                  <span class="badge badge--draft">Original</span>
+                }
+              </div>
+              <p class="slot-hint">{{ card.slot.hint }}</p>
+            </div>
+            <div class="slot-actions">
+              <button
+                class="button button--primary button--small"
+                type="button"
+                [attr.aria-label]="
+                  'Cambiar ' + card.slot.label + ', ' + group.page
+                "
+                (click)="change(card.slot)"
+              >
+                Cambiar
+              </button>
+              @if (card.custom) {
+                <button
+                  class="button button--ghost button--small"
+                  type="button"
+                  [attr.aria-label]="
+                    'Ajustar ' + card.slot.label + ', ' + group.page
+                  "
+                  (click)="adjust(card.slot)"
+                >
+                  Ajustar
+                </button>
+                <button
+                  class="link-button"
+                  type="button"
+                  [attr.aria-disabled]="pending() === card.slot.key"
+                  [attr.aria-label]="
+                    'Restaurar la foto original de ' +
+                    card.slot.label +
+                    ', ' +
+                    group.page
+                  "
+                  (click)="reset(card.slot)"
+                >
+                  {{
+                    pending() === card.slot.key
+                      ? "Restaurando…"
+                      : "Restaurar original"
+                  }}
+                </button>
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>
+
+<app-media-picker (picked)="picked($event)" />
+
+<dialog
+  #editor
+  class="editor"
+  aria-labelledby="editor-title"
+  (close)="draft.set(null)"
+>
+  @if (draft(); as d) {
+    <header class="editor-header">
+      <div>
+        <h2 id="editor-title">{{ d.slot.label }}</h2>
+        <p class="panel-intro">{{ d.slot.page }}</p>
+      </div>
+      <button
+        class="icon-close"
+        type="button"
+        aria-label="Cerrar"
+        (click)="closeEditor()"
+      >
+        <app-icon name="close" />
+      </button>
+    </header>
+
+    <div class="editor-body">
+      @if (d.slot.fit === "cover") {
+        <div class="editor-step">
+          <h3>Toca lo más importante de la foto</h3>
+          <p class="form-hint" id="focus-hint">
+            Esa parte siempre quedará a la vista al recortarla, por ejemplo las
+            caras. Con el teclado, usa las flechas.
+          </p>
+          <div class="focus-picker" (click)="setFocus($event)">
+            <img [src]="d.url" alt="" />
+            <button
+              class="focus-dot"
+              type="button"
+              aria-describedby="focus-hint"
+              [attr.aria-label]="
+                'Punto de enfoque: ' +
+                d.focusX +
+                ' % horizontal, ' +
+                d.focusY +
+                ' % vertical'
+              "
+              [style.left.%]="d.focusX"
+              [style.top.%]="d.focusY"
+              (keydown)="nudge($event)"
+            ></button>
+          </div>
+        </div>
+      }
+
+      <div class="editor-step">
+        <h3>Así se verá</h3>
+        <ul class="preview-list">
+          @for (preview of d.slot.previews; track preview.label) {
+            <li>
+              <div
+                class="slot-preview"
+                [class.is-contain]="d.slot.fit === 'contain'"
+                [style.aspect-ratio]="preview.ratio"
+              >
+                <img
+                  [src]="d.url"
+                  alt=""
+                  [style.object-position]="draftPosition()"
+                />
+              </div>
+              @if (d.slot.previews.length > 1) {
+                <p class="preview-label">{{ preview.label }}</p>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+
+    @if (!d.slot.decorative) {
+      <div class="form-field">
+        <label class="form-label" for="site-image-alt"
+          >Describe la foto en una frase</label
+        >
+        <textarea
+          class="form-input alt-input"
+          id="site-image-alt"
+          rows="2"
+          maxlength="300"
+          placeholder="Por ejemplo: Una mamá y su hijo construyen con bloques de colores."
+          aria-describedby="site-image-alt-hint"
+          [attr.aria-invalid]="submitted() && altMissing()"
+          [value]="d.alt"
+          (input)="setAlt($event)"
+        ></textarea>
+        <p class="form-hint" id="site-image-alt-hint">
+          La leen Google y las personas que usan lector de pantalla.
+        </p>
+        @if (submitted() && altMissing()) {
+          <p class="form-error">Escribe una descripción corta de la foto.</p>
+        }
+      </div>
+    }
+
+    <div aria-live="polite">
+      @if (editorError(); as text) {
+        <p class="form-alert form-alert--error">{{ text }}</p>
+      }
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        class="button button--ghost button--small"
+        type="button"
+        (click)="closeEditor()"
+      >
+        Cancelar
+      </button>
+      <button
+        class="button button--primary button--small"
+        type="button"
+        [attr.aria-disabled]="pending() !== null"
+        (click)="save()"
+      >
+        {{ pending() ? "Guardando…" : "Guardar foto" }}
+      </button>
+    </div>
+  }
+</dialog>

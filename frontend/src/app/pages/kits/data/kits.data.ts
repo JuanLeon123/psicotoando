@@ -20,25 +20,6 @@ export interface DevelopmentArea {
   }[];
 }
 
-export const KIT_PHOTOS = [
-  {
-    image: 'images/advisory-stacking.webp',
-    alt: 'Vasos de colores para apilar y reproducir patrones sobre una bandeja.',
-  },
-  {
-    image: 'images/advisory-sorting.webp',
-    alt: 'Actividad de clasificación de pompones por colores con pinzas y recipientes.',
-  },
-  {
-    image: 'images/advisory-tracing.webp',
-    alt: 'Una mano traza líneas con tiza sobre una pizarra de madera.',
-  },
-  {
-    image: 'images/advisory-matching.webp',
-    alt: 'Caja de actividades con piezas de colores para asociar y encajar.',
-  },
-] as const;
-
 export const KIT_LEVELS: readonly KitLevel[] = [
   {
     name: 'Explorador',

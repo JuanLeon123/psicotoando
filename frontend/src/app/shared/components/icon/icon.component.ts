@@ -38,7 +38,8 @@ export type IconName =
   | 'star'
   | 'memory'
   | 'blocks'
-  | 'pencil';
+  | 'pencil'
+  | 'image';
 
 const ICON_PATHS: Record<IconName, readonly string[]> = {
   brain: [
@@ -81,6 +82,11 @@ const ICON_PATHS: Record<IconName, readonly string[]> = {
     'M13 9a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z',
   ],
   blocks: ['M3 14h8v7H3zM13 14h8v7h-8zM8 4h8v10H8z'],
+  image: [
+    'M3 5h18v14H3Z',
+    'm3 16 5-5 4 4 3-3 6 6',
+    'M16.5 9.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z',
+  ],
   pencil: ['M17 3l4 4L8 20H4v-4L17 3Z', 'm14 6 4 4'],
   clipboard: [
     'M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2',

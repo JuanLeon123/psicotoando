@@ -2,11 +2,12 @@
   <div class="auth-card">
     <aside class="auth-visual" aria-hidden="true">
       <img
-        ngSrc="images/family-play.webp"
+        [ngSrc]="photo().url"
         fill
         priority
         sizes="(max-width: 900px) 1vw, 42vw"
         alt=""
+        [style.object-position]="photo().position"
       />
       <p class="visual-note">
         <app-icon name="heart" />Juego con sentido, gratificante y

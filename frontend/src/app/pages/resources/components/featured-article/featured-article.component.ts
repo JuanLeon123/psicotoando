@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { SiteImagesService } from '../../../../core/site-images/site-images.service';
 
 @Component({
   selector: 'app-featured-article',
@@ -8,4 +9,7 @@ import { NgOptimizedImage } from '@angular/common';
   styleUrl: './featured-article.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FeaturedArticleComponent {}
+export class FeaturedArticleComponent {
+  protected readonly photo =
+    inject(SiteImagesService).image('resources.featured');
+}

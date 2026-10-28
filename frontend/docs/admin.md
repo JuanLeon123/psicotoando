@@ -11,6 +11,7 @@ Ruta: `/admin`. Solo entra la cuenta fija de administración (`ADMIN_EMAIL` / `A
 | `/admin/productos/nuevo` | Crear producto. Al guardar se crea, se sube la imagen y se abre su edición |
 | `/admin/productos/:id` | Editar producto, con vista previa de cómo se verá en la tienda |
 | `/admin/pedidos` | Vacío hasta que exista el checkout con la pasarela de pago (Wompi) |
+| `/admin/imagenes` | Fotos de la web por página: cambiar, ajustar el punto de enfoque o restaurar la original |
 | `/admin/ajustes` | WhatsApp, correo de contacto, Instagram y Facebook |
 
 ## Cómo se conecta con la web pública
@@ -18,6 +19,7 @@ Ruta: `/admin`. Solo entra la cuenta fija de administración (`ADMIN_EMAIL` / `A
 - **Productos:** la tienda (`/tienda`) y la sección de kits de la portada leen `GET /api/products`, que devuelve los productos publicados en el orden del campo «Orden en la tienda». Un borrador solo se ve en el panel.
 - **Precio:** pesos colombianos sin decimales. Vacío = «Precio próximamente».
 - **Inventario:** vacío = sin control; 0 = «Agotado».
+- **Imágenes de la web:** cada hueco (portada, Sobre nosotros, galerías de Kits y Asesoría, Recursos, acceso) toma una foto de la biblioteca del blog. `GET /api/site-images` devuelve solo los huecos cambiados y la web los carga al arrancar (máximo 2 s); el resto muestra su imagen original de `public/images/`. Si se borra la foto de la biblioteca, el hueco vuelve a la original. Los huecos se definen en `core/site-images/site-images.models.ts` y sus claves deben coincidir con `backend/src/site-images/site-image-slots.ts`.
 - **Ajustes:** con WhatsApp configurado, «Agenda una asesoría» y la ficha de cada kit ofrecen escribir por WhatsApp con un mensaje ya redactado. Instagram, Facebook y el correo aparecen como enlaces en el footer y en la página de Asesoría. Sin ellos, la web muestra «Enlaces disponibles próximamente».
 
 ## Protección
@@ -32,5 +34,6 @@ Ruta: `/admin`. Solo entra la cuenta fija de administración (`ADMIN_EMAIL` / `A
 src/app/core/admin/          AdminApiService y modelos del resumen
 src/app/core/catalog/        Modelos de producto, ProductsService (público) y formatCop
 src/app/core/settings/       SiteSettingsService (se carga al arrancar) y enlace de WhatsApp
-src/app/pages/admin/         Layout, resumen, productos (lista y formulario), pedidos y ajustes
+src/app/core/site-images/    Huecos de imagen editables y SiteImagesService
+src/app/pages/admin/         Layout, resumen, productos (lista y formulario), pedidos, blog, imágenes y ajustes
 ```

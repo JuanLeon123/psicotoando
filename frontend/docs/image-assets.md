@@ -1,5 +1,7 @@
 # Recursos visuales provisionales
 
+Las fotos de portada, Sobre nosotros, galerías, Recursos y acceso se pueden cambiar desde el panel (`/admin/imagenes`, ver [admin.md](admin.md)). Los archivos de esta lista quedan como imagen original de cada hueco.
+
 Las fotografías se generaron con la herramienta integrada `image_gen` para aproximar el mockup. Se exportaron a WebP con `cwebp` para servirlas desde el propio proyecto. No son fotografías de productos reales ni los archivos originales de la referencia.
 
 | Archivo final                     | Uso                          |
